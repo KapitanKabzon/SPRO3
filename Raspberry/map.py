@@ -1,61 +1,60 @@
-import os
-os.environ["PYSDL2_DLL_PATH"] = "/usr/lib64"
-import sdl2
-import sdl2.ext
-import sdl2.sdlgfx
+import cocos
 import json
 
-BACKGROUND = sdl2.ext.Color(0, 0, 0)
+
+def ReadMap(file):
+    with open(file) as f:
+        data = json.load(f)
+    return data
 
 
-class Renderer(sdl2.ext.Renderer):
-    def __init__(self, colour=BACKGROUND, logical_size=(800, 400)):
-        self.window = sdl2.ext.Window("Test", size=logical_size)
-        self.window.show()
-        self.colour = colour
-        self.map = []
-        self.read_map()
-        self.wallcolour = sdl2.ext.Color(255, 0, 0)
-        super().__init__(self.window, logical_size=logical_size)
-
-    def render(self):
-        self.clear(self.colour)
-        self.fill(self.colour)
-        for item in self.map:
-            self.thick_line(item, sdl2.ext.Color(255, 0, 0), 10)
-        self.present()
-
-    def read_map(self):
-        try:
-            with open('map.json', 'r') as f:
-                self.map = json.load(f)
-        except:
-            print('Could not read map.json')
-
-    def thick_line(self, points, color=None, thickness=3):
-        color = sdl2.ext.rgba_to_color(color)
-        sdl2.sdlgfx.thickLineColor(self.renderer, points[0], points[1],
-                                   points[2], points[3], thickness, color)
+def Interception(A, B):
+    a1, c1, a2, c2 = A[0], A[1], B[0], B[1]
+    if (a2 - a1) is 0:
+        return None
+    x = (c1 - c2)/(a2 - a1)
+    y = a1 * x + c1
+    return x, y
 
 
-def run():
-    sdl2.ext.init()
+def PointsToFactors(A, B):
+    x1, y1, x2, y2 = A[0], A[1], B[0], B[1]
+    if (x2 - x1) is 0:
+        return None
+    a = (y2 - y1)/(x2 - x1)
+    c = y1 - a * x1
+    return a, c
 
-    renderer = Renderer(logical_size=(500, 300))
 
-    running = True
-    while running:
-        events = sdl2.ext.get_events()
-        for event in events:
-            if event.type == sdl2.SDL_QUIT:
-                running = False
-                break
-            if event.type == sdl2.SDL_KEYDOWN:
-                if event.key.keysym.sym == sdl2.SDLK_r:
-                    renderer.read_map()
-        renderer.render()
+def Midpoint(A, B):
+    x1, y1, x2, y2 = A[0], A[1], B[0], B[1]
+    x, y = x2 - x1, y2 - y1
+    return x, y
 
-try:
-    run()
-finally:
-    sdl2.ext.quit()
+
+class MapDisplay(cocos.layer.Layer):
+    is_event_handler = True
+
+    def __init__(self):
+        super(MapDisplay, self).__init__()
+        self.lines = ReadMap('map.json')
+        center = 327, 136
+        for line in self.lines:
+            fac1 = PointsToFactors(line[0], line[1])
+            fac2 = PointsToFactors(center, Midpoint(line[0], line[1]))
+            if fac1 and fac2 is not None:
+                int = Interception(fac1, fac2)
+                if int is not None:
+                    self.add(cocos.draw.Line(center, int,
+                                             (255, 255, 255, 255),
+                                             stroke_width=2))
+            self.add(cocos.draw.Line(line[0], line[1],
+                                     (255, 255, 255, 255),
+                                     stroke_width=5))
+
+
+
+cocos.director.director.init()
+map_layer = MapDisplay()
+main_scene = cocos.scene.Scene(map_layer)
+cocos.director.director.run(main_scene)
