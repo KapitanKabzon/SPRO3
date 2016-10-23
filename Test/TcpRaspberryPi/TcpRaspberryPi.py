@@ -24,4 +24,4 @@ while True:
         check = "true"
         conn.send(check.encode())  # sends confirmation to client
 
-        conn.close()  # closes the connection to the client
+    conn.close()  # closes the connection to the client
