@@ -12,11 +12,11 @@ k = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 k.bind((TCP_IP_PI, TCP_PORT_PI))
 k.listen(1)
 
-while 1:
+while True:
 	conn, (host,port) = k.accept()
 	print("Connection address:", host)
 
-	while 1:
+	while True:
 		roomnr = conn.recv(BUFFER_SIZE)
 		if not roomnr:
 			break
