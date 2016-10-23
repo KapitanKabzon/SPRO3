@@ -1,0 +1,14 @@
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\bin\Debug\SPRO3CustomerInterface.exe.config
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface.csprojResolveAssemblyReference.cache
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\MainWindow.g.cs
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\App.g.cs
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface_MarkupCompile.cache
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface_MarkupCompile.lref
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\bin\Debug\SPRO3CustomerInterface.exe
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\bin\Debug\SPRO3CustomerInterface.pdb
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\MainWindow.baml
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface.g.resources
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface.Properties.Resources.resources
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface.csproj.GenerateResource.Cache
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface.exe
+C:\Users\CatherineBeryl\Documents\Visual Studio 2015\Projects\SPRO3CustomerInterface\SPRO3CustomerInterface\obj\Debug\SPRO3CustomerInterface.pdb

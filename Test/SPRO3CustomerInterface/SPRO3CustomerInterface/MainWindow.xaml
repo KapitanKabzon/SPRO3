@@ -1,0 +1,13 @@
+﻿<Window x:Class="SPRO3CustomerInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SPRO3CustomerInterface"
+        mc:Ignorable="d"
+        Title="Hotel SDU - SPRO3MC Services" Height="250" Width="425">
+	<Grid>
+		<TextBox x:Name="Info" Text="Testing mode: This is not meant to be a high-end program. All it does is gets information from the hotel guest and sends this information to the kitchen and the moving device. Edit if you must." TextWrapping="Wrap" FontStyle="Italic" TextAlignment="Center" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" Width="200" Margin="0,20,0,0"/>
+		<Button x:Name="buttonRoomService" Content="Automated Bellhop Demo" HorizontalAlignment="Center" VerticalAlignment="Center" Height="22" Width="150" Margin="0,100,0,0" Click="button_Click"/>
+	</Grid>
+</Window>
