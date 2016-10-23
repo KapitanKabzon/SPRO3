@@ -3,8 +3,6 @@
 # p is communication between the kitchen and the Raspberry Pi
 
 import socket
-import select
-import errno
 
 TCP_IP_KIT = '10.0.1.15'  # IP on which the kitchen server is listening
 TCP_IP_PI = '10.0.1.15'  # IP on which the Raspberry Pi server is listening
