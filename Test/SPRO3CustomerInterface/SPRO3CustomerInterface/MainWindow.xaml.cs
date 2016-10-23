@@ -16,8 +16,8 @@ namespace SPRO3CustomerInterface
 		private void button_Click(object sender, RoutedEventArgs e)
 		{
 			/* Server IP and port for Kitchen */
-			string serverKit = "10.0.1.15";
-			Int32 portKit = 5005;
+			string TCP_IP_KIT = "10.0.1.15";
+			Int32 TCP_PORT_KIT = 5005;
 
 			/* Interaction boxes to get order information and room number from
 			 * user */																				
@@ -34,8 +34,8 @@ namespace SPRO3CustomerInterface
 				return;
 
 			/* Sends order and room number to Kitchen */
-			Tcp.Send(serverKit, portKit, order);
-			bool check = Tcp.Send(serverKit, portKit, roomnr);
+			Tcp.Send(TCP_IP_KIT, TCP_PORT_KIT, order);
+			bool check = Tcp.Send(TCP_IP_KIT, TCP_PORT_KIT, roomnr);
 
 			/* Checks the value returned from Tcp.Send and informs the user 
 			 * Value 'false' can be given as a result of unsuccessful 
