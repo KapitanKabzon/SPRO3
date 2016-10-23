@@ -49,4 +49,4 @@ while True:
 
         conn.send(check)
 
-        conn.close()  # closes the connection to the client
+    conn.close()  # closes the connection to the client
