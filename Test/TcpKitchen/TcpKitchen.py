@@ -15,11 +15,11 @@ h = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 h.bind((TCP_IP_KIT, TCP_PORT_KIT))
 h.listen(1)
 
-while 1:
+while True:
 	conn, addr = h.accept()
 	print("Connection address:", addr)
 
-	while 1:
+	while True:
 		# gets order information from hotel customer
 		order = conn.recv(BUFFER_SIZE)
 		if not order:
