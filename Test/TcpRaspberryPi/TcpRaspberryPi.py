@@ -13,15 +13,15 @@ k.bind((TCP_IP_PI, TCP_PORT_PI))
 k.listen(1)
 
 while True:
-	conn, (host,port) = k.accept()
-	print("Connection address:", host)
+    conn, (host, port) = k.accept()
+    print("Connection address:", host)
 
-	while True:
-		roomnr = conn.recv(BUFFER_SIZE)
-		if not roomnr:
-			break
-		print("Room number:", roomnr.decode())  # prints the room number
-		check = "true"
-		conn.send(check.encode())  # sends confirmation to client
-	
-	conn.close()  # closes the connection to the client
+    while True:
+        roomnr = conn.recv(BUFFER_SIZE)
+        if not roomnr:
+            break
+        print("Room number:", roomnr.decode())  # prints the room number
+        check = "true"
+        conn.send(check.encode())  # sends confirmation to client
+
+        conn.close()  # closes the connection to the client
