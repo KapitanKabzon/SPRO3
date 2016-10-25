@@ -1,101 +1,85 @@
-from collections import namedtuple
-import cocos
-import cocos.actions as act
-import json
-import pyglet
-
-WHITE = (255, 255, 255, 255)
-RED = (255, 0, 0, 255)
-
-Point = namedtuple('Point', ['x', 'y'])
-Line = namedtuple('Line', ['a', 'c'])
-Segment = namedtuple('Segment', ['A', 'B'])
+from tkinter import Canvas, Tk, StringVar
+from tkinter.ttk import Frame, Button, Entry, Label
+from math import pi, cos, sin
+import bellhop as hop
 
 
-class Map(cocos.cocosnode.CocosNode):
-    def __init__(self):
-        super(Map, self).__init__()
-        self.center = 327, 136
-        self.walls = []
-        self.read('map.json')
-        sprite = pyglet.image.load('pls.png')
-        self.sprite = cocos.sprite.Sprite(sprite)
-        self.add(self.sprite)
-        x, y = self.sprite.position
-        self.sprite.position = x + 100, y + 100
-        self.sprite.scale = 0.5
-        self.position = 100, 100
+class Application(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        pad = 5
+        self.grid()
 
-    def read(self, file):
-        with open(file) as f:
-            lines = json.load(f)
-        walls = []
-        for line in lines:
-            seg = Segment(Point._make(line[0]), Point._make(line[1]))
-            mid = Map.Midpoint(seg.A, seg.B)
-            walls.append((cocos.draw.Line(self.center, mid, RED,
-                                          stroke_width=3)))
-            walls.append((cocos.draw.Line(seg.A, seg.B, WHITE,
-                                          stroke_width=5)))
-        for wall in walls:
-            self.add(wall)
-        self.walls += walls
+        # Map canvas
+        self.canvas = Canvas(self, width=800, height=600)
+        self.canvas.grid(row=0, column=0, columnspan=4, padx=pad, pady=pad)
 
-    def remove_walls(self):
-        for wall in self.walls:
-            self.remove(wall)
-        self.walls = []
+        # Add button
+        self.add = Button(self, text='Add')
+        self.add.grid(row=1, column=0, padx=pad, pady=pad)
 
-    def render(self):
-        pass
+        # Entry
+        self.entry = Entry(self)
+        self.entry.grid(row=1, column=1,  padx=pad, pady=pad)
 
-    @staticmethod
-    def Interception(A: Line, B: Line) -> Point:
-        if (B.a - A.a) is 0:
-            return None
-        x = (A.c - B.c)/(B.a - A.a)
-        y = A.a * x + A.c
-        return Point(x, y)
+        self.entry_contents = StringVar()
+        self.entry['textvariable'] = self.entry_contents
+        self.entry_contents.set('x1, y1, x2, y2')
+        self.entry.bind('<Key-Return>', self.entry_handler)
 
-    @staticmethod
-    def PointsToFactors(A: Point, B: Point) -> Line:
-        if (B.x - A.x) is 0:
-            return None
-        a = (B.y - B.x)/(A.x - B.x)
-        c = A.y - a * A.x
-        return Line(a, c)
+        # Status label
+        self.status = Label(self)
+        self.status.grid(row=1, column=2, padx=pad, pady=pad)
 
-    @staticmethod
-    def Midpoint(A: Point, B: Point) -> Point:
-        x, y = A.x + (B.x - A.x)/2, A.y + (B.y - A.y)/2
-        return Point(x, y)
+        self.entry.focus()
 
+        # Bellhop biz
+        self.ping = hop.Ping(45, 0.15*pi, 0.5 * pi)
+        self.ping.d = 0
+        self.r = 80
+        self.angle = 0
+        self.ping.d = 30
+        xoff = 800/2 + self.r * cos(self.angle)
+        yoff = 600/2 + self.r * sin(self.angle)
+        x1, y1 = self.ping.point()
+        x2, y2 = self.ping.measurement_point()
+        x1 += xoff
+        x2 += xoff
+        y1 += yoff
+        y2 += yoff
+        self.xoff = xoff
+        self.yoff = yoff
+        print(x1, y1, x2, y2)
+        cords = (x1, y1, x2, y2)
+        self.ping_line = self.canvas.create_line(*cords,
+                                                 fill='red',
+                                                 width=1,
+                                                 activewidth=4)
+        self.onUpdate()
 
-class MapDisplay(cocos.layer.Layer):
-    is_event_handler = True
+    def entry_handler(self, event):
+        if self.focus_get() is self.entry:
+            print(self.entry_contents.get())
 
-    def __init__(self):
-        super(MapDisplay, self).__init__()
-        self.map = Map()
-        self.add(self.map)
-        self.keys_pressed = set()
-
-    def on_key_press(self, key, modifiers):
-        if key is 32:
-            try:
-                self.map.remove_walls()
-            except:
-                print('No wall to remove')
-
-    def on_key_release(self, key, modifiers):
-        if key is 108:
-            try:
-                self.map.read('map.json')
-            except:
-                print('Can not read walls file')
+    def onUpdate(self):
+        old = self.canvas.coords(self.ping_line)
+        old_point = old[2], old[3]
+        step = 2*pi/(30)
+        step2 = 2*pi/(pi*25)
+        self.angle += step2
+        self.xoff = 800/2 + self.r * cos(self.angle)
+        self.yoff = 600/2 + self.r * sin(self.angle)
+        self.reverse = False
+        self.ping.gamma += step
+        point = self.ping.measurement_point()
+        new_point = point[0] + self.xoff, point[1] + self.yoff
+        cords = old_point[0], old_point[1], new_point[0], new_point[1]
+        self.canvas.create_line(*cords, fill='yellow', width=1)
+        new = old[0], old[1], point[0] + self.xoff, point[1] + self.yoff
+        self.canvas.coords(self.ping_line, new)
+        self.after(1, self.onUpdate)
 
 
-cocos.director.director.init(width=800, height=600)
-map_layer = MapDisplay()
-main_scene = cocos.scene.Scene(map_layer)
-cocos.director.director.run(main_scene)
+root = Tk()
+app = Application(master=root)
+app.mainloop()
