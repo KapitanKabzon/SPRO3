@@ -1,51 +1,52 @@
-import math
+from math import sin, cos
 import serial
-import random
-import time
 
 
 class Ping():
-    def __init__(self, id, r, gamma, beta):
-        self.id = id
+    def __init__(self, r, beta, gamma, arduino=None, id=None):
         self.r = r
-        self.gamma = gamma
         self.beta = beta
+        self.gamma = gamma
         self.d = 0  # reading
 
-    def sensor_point(self, hop):
-        xs = hop.x + hop.r * math.cos(self.gamma + hop.alpha)
-        ys = hop.y + hop.r * math.sin(self.gamma + hop.alpha)
-        return xs, ys
+    def point(self):
+        """Return x, y coordinates with respect to own coordinate system"""
+        x, y = self.r * cos(self.beta), self.r * sin(self.beta)
+        return x, y
+
+    def measurement_point(self):
+        """Retrun x, y coordinates of measured point with respect to own
+        coordinate system"""
+        x, y = self.point()
+        xm = x + self.d * cos(self.gamma)
+        ym = y + self.d * sin(self.gamma)
+        return xm, ym
 
 
-class Bellhopp():
+class Bellhop():
     def __init__(self, x, y, alpha):
         self.x = x
         self.y = y
         self.alpha = alpha
         self.arduino = Arduino()
 
-    def get_data():
-
 
 class Arduino():
     def __init__(self, PORT):
-#        self.serial = serial.Serial(PORT)
+        self.serial = serial.Serial(PORT)
         self.reading = []
 
+    def sensor_data(self, id):
+        pass
+
     def read_data(self):
-        # line = self.serial.readline().decode().strip('\r\n')
-        # self.reading = line.split(sep=',')
-        a = random.randrange(0, 5)
-        time.sleep(1)
-        return a
+        line = self.serial.readline.decode()
+        print(line)
 
     def close(self):
         self.serial.close()
 
-# test
-arduino = Arduino('/dev/ttyUSB0')
 
-while True:
-    data = arduino.read_data()
-    print(data)
+if False:
+    arduino = Arduino('/dev/ttyUSB0')
+    arduino.close()
