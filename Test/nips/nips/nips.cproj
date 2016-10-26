@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>MultipleUltrasonicTst</AssemblyName>
-    <Name>MultipleUltrasonicTst</Name>
-    <RootNamespace>MultipleUltrasonicTst</RootNamespace>
+    <AssemblyName>nips</AssemblyName>
+    <Name>nips</Name>
+    <RootNamespace>nips</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -40,6 +40,15 @@
   <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
+      <Value>NDEBUG</Value>
       <Value>NDEBUG</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
@@ -79,6 +88,15 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
+      <Value>DEBUG</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
@@ -95,7 +113,6 @@
   <avrgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>libm</Value>
-      <Value>printf_flt</Value>
     </ListValues>
   </avrgcc.linker.libraries.Libraries>
   <avrgcc.assembler.general.IncludePaths>
@@ -108,13 +125,25 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ds1621.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ds1621.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="i2cmaster.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lcd.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lcd.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="usart.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="usart.h">
+    <Compile Include="twimaster.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
