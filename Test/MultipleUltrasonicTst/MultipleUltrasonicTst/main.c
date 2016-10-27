@@ -6,6 +6,7 @@
  *	Edited by: Catherine Beryl Basson
  */ 
 #define F_CPU 16E6
+#define US_PER_CLK 0.0625
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -103,7 +104,7 @@ float get_distance(void)
 	if (count > MAX_PING || count == 0)
 		count = MAX_PING;
 	
-	float dist = (double) count / 16000000 * 17013.0;
+	float dist = (double) count * US_PER_CLK / 58.275; /* pulse width time / ((microseconds per centimetre for speed of sound) * 2) */ 
 	count = 0;
 	return dist;
 }

@@ -284,7 +284,7 @@ float get_distance(void)
      28c:	a0 93 36 01 	sts	0x0136, r26
      290:	b0 93 37 01 	sts	0x0137, r27
 	
-	float dist = (double) count / 16000000 * 17013.0;
+	float dist = (double) count * US_PER_CLK / 58.275; /* pulse width time / ((microseconds per centimetre for speed of sound) * 2) */ 
      294:	60 91 34 01 	lds	r22, 0x0134
      298:	70 91 35 01 	lds	r23, 0x0135
      29c:	80 91 36 01 	lds	r24, 0x0136
@@ -299,18 +299,18 @@ float get_distance(void)
 	if (count > MAX_PING || count == 0)
 		count = MAX_PING;
 	
-	float dist = (double) count / 16000000 * 17013.0;
+	float dist = (double) count * US_PER_CLK / 58.275; /* pulse width time / ((microseconds per centimetre for speed of sound) * 2) */ 
      2b4:	0e 94 32 03 	call	0x664	; 0x664 <__floatunsisf>
      2b8:	20 e0       	ldi	r18, 0x00	; 0
-     2ba:	34 e2       	ldi	r19, 0x24	; 36
-     2bc:	44 e7       	ldi	r20, 0x74	; 116
-     2be:	5b e4       	ldi	r21, 0x4B	; 75
-     2c0:	0e 94 c0 02 	call	0x580	; 0x580 <__divsf3>
-     2c4:	20 e0       	ldi	r18, 0x00	; 0
-     2c6:	3a ee       	ldi	r19, 0xEA	; 234
-     2c8:	44 e8       	ldi	r20, 0x84	; 132
-     2ca:	56 e4       	ldi	r21, 0x46	; 70
-     2cc:	0e 94 c0 03 	call	0x780	; 0x780 <__mulsf3>
+     2ba:	30 e0       	ldi	r19, 0x00	; 0
+     2bc:	40 e8       	ldi	r20, 0x80	; 128
+     2be:	5d e3       	ldi	r21, 0x3D	; 61
+     2c0:	0e 94 c0 03 	call	0x780	; 0x780 <__mulsf3>
+     2c4:	2a e9       	ldi	r18, 0x9A	; 154
+     2c6:	39 e1       	ldi	r19, 0x19	; 25
+     2c8:	49 e6       	ldi	r20, 0x69	; 105
+     2ca:	52 e4       	ldi	r21, 0x42	; 66
+     2cc:	0e 94 c0 02 	call	0x580	; 0x580 <__divsf3>
 	count = 0;
 	return dist;
 }
