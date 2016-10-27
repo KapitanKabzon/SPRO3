@@ -119,7 +119,7 @@ double ping_distance(void)
 	if (echo > MAX_PING || echo == 0)
 		echo = MAX_PING;
 
-	distance = (double) echo / 16000000.0 * 17013.0;
+	distance = (double) echo / 16000000 * 17013.0;
 	echo = 0;
 
 	return distance;

@@ -2,7 +2,8 @@
  * main.c
  *
  * Created: 24/10/2016 14:35:45
- *  Author: CatherineBeryl
+ *  Author: Piotr Chromi?ski
+ *	Edited by: Catherine Beryl Basson
  */ 
 #define F_CPU 16E6
 
@@ -11,24 +12,28 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <util/delay.h>
+#include <inttypes.h>
 #include "usart.h"
 
-#define TRIGGER PB0
-#define ECHO0 PD2
+#define TRIGGER PB0			/* Trigger pin - Same for all sensors */
+#define ECHO0 PD2			/* Echo pin for sensor 0 */
+#define ECHO0_REG PCINT18	/* Echo register for sensor 0 (interrupt) */
 #define ECHO1 PD3
+#define ECHO1_REG PCINT19
 
-#define SENSORS 2
-#define MAX_PING 376183
+#define SENSORS 2			/* Total number of sensors */
+#define MAX_PING 376183		/* Max number of clock cycles to max distance */
 
-//void interrupt_init(void);
 void sensor_init(void);
 void interrupt_init(void);
-float read_distance(void);
+void interrupt_echo_enable(void);
+void interrupt_echo_disable(void);
+float get_distance(void);
 
 volatile int flag = 0;
-volatile int wait = 1;
 volatile uint32_t count = 0;
 volatile char sensor[] = {ECHO0, ECHO1};
+volatile char sensor_reg[] = {ECHO0_REG, ECHO1_REG};
 volatile int current_sensor = 0;
 
 int main(void)
@@ -38,64 +43,97 @@ int main(void)
 	sensor_init();
 	interrupt_init();
 	
-	float distance = 0.0;
-
+	float distance[SENSORS] = {0.00};
+	
 	while (1){
-		distance = read_distance();
-		printf("Distance %d: %2f\n", current_sensor, distance);
+		distance[current_sensor] = get_distance();
+		printf("Sensor %d: %.2f\n", current_sensor, distance[current_sensor]);
 		current_sensor++;
-		if(current_sensor > (SENSORS - 1))
+		if (current_sensor > (SENSORS - 1))
 			current_sensor = 0;
-		_delay_ms(1000);
+		_delay_us(1000000);
 	}
 }
 
 void sensor_init(void)
 {
-	DDRB |= _BV(TRIGGER);		// sets trigger as output
-	PORTB &= ~(_BV(TRIGGER));	// clears trigger so it outputs nothing
+	DDRB |= _BV(TRIGGER);		/* Sets trigger as output */
+	PORTB &= ~(_BV(TRIGGER));	/* Clears trigger so it outputs nothing */
 	
-	DDRD &= ~(_BV(ECHO0));		// sets ECHO1 as input
-	DDRD &= ~(_BV(ECHO1));		// sets ECHO2 as input
+	DDRD &= ~(_BV(ECHO0));		/* Sets ECHO1 as input */
+	DDRD &= ~(_BV(ECHO1));		/* Sets ECHO2 as input */
 }
 
 void interrupt_init(void)
 {
-	PCICR |= _BV(PCIE2);					// set PCIE2 to enable PCMSK2 scan (PD0 - PD7)
-	PCMSK2 |= _BV(PCINT18) | _BV(PCINT19);	// trigger interrupt on pin change for sensors
+	PCICR |= _BV(PCIE2);	/* Set PCIE2 to enable PCMSK2 scan (PD0 - PD7) */
 }
 
-float read_distance(void)
+void interrupt_echo_enable(void)
 {
+	PCMSK2 |= _BV(sensor_reg[current_sensor]);	/* Trigger interrupt on lvl change */
+}
+
+void interrupt_echo_disable(void)
+{
+	PCMSK2 &= ~(_BV(sensor_reg[current_sensor]));  /* Disable interrupt for pin */ 
+}
+
+float get_distance(void)
+{
+	interrupt_echo_enable();
 	PORTB &= ~(_BV(TRIGGER));
+	sei();
+	
+	/* Send a pulse */
 	_delay_us(20);
 	PORTB |= _BV(TRIGGER);
 	_delay_us(12);
 	PORTB &= ~(_BV(TRIGGER));
-	sei();
 	
-	while(wait);
-	while (flag) {
-		count++;
-		_delay_us(10);
-	}
-	
+	/* Wait until echo is done receiving pulse */
+	flag = 1;
+ 	while (flag);
+		 
+	/* Disable echo pin from reading */
+	cli();
+	interrupt_echo_disable();
+
+	/* Check that maximum number of clock cycles hasn't been exceeded */
 	if (count > MAX_PING || count == 0)
 		count = MAX_PING;
-		
-	float distance = ((double) count / 1600000.0 * 17013.0);
+	
+	float dist = (double) count / 16000000 * 17013.0;
 	count = 0;
-	cli();
-	return distance;
+	return dist;
 }
 
 ISR (PCINT2_vect)
 {
 	if ((PIND & _BV(sensor[current_sensor]))) {
-		flag = 1;
-		wait = 0;
+		/* Set up and start TIMER0 when echo receives pulse*/
+		TIMSK0 |= (1 << TOIE0);
+		TCCR0B |= _BV(CS00);
 	} else {
+		/* Stop timer and reset flag when pulse is done */
+		TCCR0B &= ~(_BV(CS00));
+		TIMSK0 &= ~(_BV(TOIE0));
+		count += TCNT0;
+		TCNT0 = 0;
 		flag = 0;
-		wait = 1;
+	}
+}
+
+ISR (TIMER0_OVF_vect)
+{
+	/* Increase counter at every overflow */
+	count += 255;
+	
+	if (count > MAX_PING){
+		flag = 0;
+		TCCR0B &= ~(_BV(CS00));
+		TIMSK0 &= ~(_BV(TOIE0));
+		count += TCNT0;
+		TCNT0 = 0;
 	}
 }
