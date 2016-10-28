@@ -3,10 +3,9 @@
  *
  * Created: 24/10/2016 14:35:45
  *  Author: Piotr Chromi?ski
- *	Edited by: Catherine Beryl Basson
+ *  Edited by: Catherine Beryl Basson
  */ 
 #define F_CPU 16E6
-#define US_PER_CLK 0.0625
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -16,15 +15,21 @@
 #include <inttypes.h>
 #include "usart.h"
 
-#define TRIGGER PB0			/* Trigger pin - Same for all sensors */
-#define ECHO0 PD2			/* Echo pin for sensor 0 */
-#define ECHO0_REG PCINT18	/* Echo register for sensor 0 (interrupt) */
+/* #define for trigger pin, for echo pin and registers, and for total number
+ * of sensors */
+#define TRIGGER PB0
+#define ECHO0 PD2
+#define ECHO0_REG PCINT18
 #define ECHO1 PD3
 #define ECHO1_REG PCINT19
+#define ECHO2 PD4
+#define ECHO2_REG PCINT20
+#define SENSORS 3
 
-#define SENSORS 2			/* Total number of sensors */
-#define MAX_PING 376183		/* Max number of clock cycles to max distance */
-
+/* #define for max number of clock cycles before max distance, and the time
+ * duration in microseconds of one clock cycle */
+#define MAX_PING 376183
+#define US_PER_CLK 0.
 void sensor_init(void);
 void interrupt_init(void);
 void interrupt_echo_enable(void);
@@ -33,8 +38,8 @@ float get_distance(void);
 
 volatile int flag = 0;
 volatile uint32_t count = 0;
-volatile char sensor[] = {ECHO0, ECHO1};
-volatile char sensor_reg[] = {ECHO0_REG, ECHO1_REG};
+volatile char sensor[] = {ECHO0, ECHO1, ECHO2};
+volatile char sensor_reg[] = {ECHO0_REG, ECHO1_REG, ECHO2_REG};
 volatile int current_sensor = 0;
 
 int main(void)
@@ -50,7 +55,9 @@ int main(void)
 		distance[current_sensor] = get_distance();
 		printf("Sensor %d: %.2f\n", current_sensor, distance[current_sensor]);
 		current_sensor++;
+		
 		if (current_sensor > (SENSORS - 1))
+			//printf("\n");
 			current_sensor = 0;
 		_delay_us(1000000);
 	}
@@ -58,26 +65,19 @@ int main(void)
 
 void sensor_init(void)
 {
-	DDRB |= _BV(TRIGGER);		/* Sets trigger as output */
-	PORTB &= ~(_BV(TRIGGER));	/* Clears trigger so it outputs nothing */
+	/* Sets trigger as output, and clears so it outputs nothing */
+	DDRB |= _BV(TRIGGER);		
+	PORTB &= ~(_BV(TRIGGER));
 	
-	DDRD &= ~(_BV(ECHO0));		/* Sets ECHO1 as input */
-	DDRD &= ~(_BV(ECHO1));		/* Sets ECHO2 as input */
+	/* Sets ECHO pins as input */
+	DDRD &= ~(_BV(ECHO0));
+	DDRD &= ~(_BV(ECHO1));
 }
 
 void interrupt_init(void)
 {
-	PCICR |= _BV(PCIE2);	/* Set PCIE2 to enable PCMSK2 scan (PD0 - PD7) */
-}
-
-void interrupt_echo_enable(void)
-{
-	PCMSK2 |= _BV(sensor_reg[current_sensor]);	/* Trigger interrupt on lvl change */
-}
-
-void interrupt_echo_disable(void)
-{
-	PCMSK2 &= ~(_BV(sensor_reg[current_sensor]));  /* Disable interrupt for pin */ 
+	/* Set PCIE2 to enable PCMSK2 scan (PD0 - PD7) */
+	PCICR |= _BV(PCIE2);
 }
 
 float get_distance(void)
@@ -107,6 +107,18 @@ float get_distance(void)
 	float dist = (double) count * US_PER_CLK / 58.275; /* pulse width time / ((microseconds per centimetre for speed of sound) * 2) */ 
 	count = 0;
 	return dist;
+}
+
+void interrupt_echo_enable(void)
+{
+	/* Trigger interrupt on level change */
+	PCMSK2 |= _BV(sensor_reg[current_sensor]);
+}
+
+void interrupt_echo_disable(void)
+{
+	/* Disable interrupt for pin */
+	PCMSK2 &= ~(_BV(sensor_reg[current_sensor]));
 }
 
 ISR (PCINT2_vect)
