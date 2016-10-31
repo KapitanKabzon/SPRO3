@@ -39,8 +39,7 @@
 void sensor_init(void);
 void interrupt_init(void);
 
-void interrupt_echo_enable(void);
-void interrupt_echo_disable(void);
+/* Functions to perform tasks */
 float get_distance(void);
 
 /* Modified by interrupts */
@@ -70,8 +69,9 @@ int main(void)
 		/* Send distance information over USART if usart_flag is set */
 		if (usart_flag){
 			for(int i = 0; i < SENSORS; i++){
-				printf("Sensor %d: %.2f\n", i, distance[i]);
+				printf("%.2f, ",distance[i]);
 			}
+			printf("\n");
 			usart_flag = 0;
 		}
 		
