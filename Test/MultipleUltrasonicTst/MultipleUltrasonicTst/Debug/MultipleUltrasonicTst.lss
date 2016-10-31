@@ -3,31 +3,31 @@ MultipleUltrasonicTst.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000034  00800100  000013b0  00001444  2**0
+  0 .data         0000002a  00800100  000013be  00001452  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000013b0  00000000  00000000  00000094  2**1
+  1 .text         000013be  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000011  00800134  00800134  00001478  2**0
+  2 .bss          00000011  0080012a  0080012a  0000147c  2**0
                   ALLOC
-  3 .comment      0000005c  00000000  00000000  00001478  2**0
+  3 .comment      0000005c  00000000  00000000  0000147c  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000014d4  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000014d8  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000088  00000000  00000000  00001514  2**0
+  5 .debug_aranges 00000088  00000000  00000000  00001518  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000005d3  00000000  00000000  0000159c  2**0
+  6 .debug_info   000005fb  00000000  00000000  000015a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000351  00000000  00000000  00001b6f  2**0
+  7 .debug_abbrev 0000037c  00000000  00000000  00001b9b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000002d6  00000000  00000000  00001ec0  2**0
+  8 .debug_line   000002e4  00000000  00000000  00001f17  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000017c  00000000  00000000  00002198  2**2
+  9 .debug_frame  0000017c  00000000  00000000  000021fc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000002db  00000000  00000000  00002314  2**0
+ 10 .debug_str    000002ed  00000000  00000000  00002378  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000002be  00000000  00000000  000025ef  2**0
+ 11 .debug_loc    000002a6  00000000  00000000  00002665  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000080  00000000  00000000  000028ad  2**0
+ 12 .debug_ranges 00000080  00000000  00000000  0000290b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -94,18 +94,18 @@ Disassembly of section .text:
      176:	11 e0       	ldi	r17, 0x01	; 1
      178:	a0 e0       	ldi	r26, 0x00	; 0
      17a:	b1 e0       	ldi	r27, 0x01	; 1
-     17c:	e0 eb       	ldi	r30, 0xB0	; 176
+     17c:	ee eb       	ldi	r30, 0xBE	; 190
      17e:	f3 e1       	ldi	r31, 0x13	; 19
      180:	02 c0       	rjmp	.+4      	; 0x186 <__do_copy_data+0x10>
      182:	05 90       	lpm	r0, Z+
      184:	0d 92       	st	X+, r0
-     186:	a4 33       	cpi	r26, 0x34	; 52
+     186:	aa 32       	cpi	r26, 0x2A	; 42
      188:	b1 07       	cpc	r27, r17
      18a:	d9 f7       	brne	.-10     	; 0x182 <__do_copy_data+0xc>
 
 0000018c <__do_clear_bss>:
      18c:	21 e0       	ldi	r18, 0x01	; 1
-     18e:	a4 e3       	ldi	r26, 0x34	; 52
+     18e:	aa e2       	ldi	r26, 0x2A	; 42
      190:	b1 e0       	ldi	r27, 0x01	; 1
      192:	01 c0       	rjmp	.+2      	; 0x196 <.do_clear_bss_start>
 
@@ -113,11 +113,11 @@ Disassembly of section .text:
      194:	1d 92       	st	X+, r1
 
 00000196 <.do_clear_bss_start>:
-     196:	a5 34       	cpi	r26, 0x45	; 69
+     196:	ab 33       	cpi	r26, 0x3B	; 59
      198:	b2 07       	cpc	r27, r18
      19a:	e1 f7       	brne	.-8      	; 0x194 <.do_clear_bss_loop>
      19c:	0e 94 43 02 	call	0x486	; 0x486 <main>
-     1a0:	0c 94 d6 09 	jmp	0x13ac	; 0x13ac <_exit>
+     1a0:	0c 94 dd 09 	jmp	0x13ba	; 0x13ba <_exit>
 
 000001a4 <__bad_interrupt>:
      1a4:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -144,8 +144,8 @@ ISR (PCINT2_vect)
 	if ((PIND & _BV(sensor[sensor_id]))) {
      1c0:	89 b1       	in	r24, 0x09	; 9
      1c2:	90 e0       	ldi	r25, 0x00	; 0
-     1c4:	e0 91 34 01 	lds	r30, 0x0134
-     1c8:	f0 91 35 01 	lds	r31, 0x0135
+     1c4:	e0 91 2a 01 	lds	r30, 0x012A
+     1c8:	f0 91 2b 01 	lds	r31, 0x012B
      1cc:	ed 5f       	subi	r30, 0xFD	; 253
      1ce:	fe 4f       	sbci	r31, 0xFE	; 254
      1d0:	00 80       	ld	r0, Z
@@ -182,23 +182,23 @@ ISR (PCINT2_vect)
      200:	80 83       	st	Z, r24
 		count += TCNT0;
      202:	26 b5       	in	r18, 0x26	; 38
-     204:	80 91 36 01 	lds	r24, 0x0136
-     208:	90 91 37 01 	lds	r25, 0x0137
-     20c:	a0 91 38 01 	lds	r26, 0x0138
-     210:	b0 91 39 01 	lds	r27, 0x0139
+     204:	80 91 2c 01 	lds	r24, 0x012C
+     208:	90 91 2d 01 	lds	r25, 0x012D
+     20c:	a0 91 2e 01 	lds	r26, 0x012E
+     210:	b0 91 2f 01 	lds	r27, 0x012F
      214:	82 0f       	add	r24, r18
      216:	91 1d       	adc	r25, r1
      218:	a1 1d       	adc	r26, r1
      21a:	b1 1d       	adc	r27, r1
-     21c:	80 93 36 01 	sts	0x0136, r24
-     220:	90 93 37 01 	sts	0x0137, r25
-     224:	a0 93 38 01 	sts	0x0138, r26
-     228:	b0 93 39 01 	sts	0x0139, r27
+     21c:	80 93 2c 01 	sts	0x012C, r24
+     220:	90 93 2d 01 	sts	0x012D, r25
+     224:	a0 93 2e 01 	sts	0x012E, r26
+     228:	b0 93 2f 01 	sts	0x012F, r27
 		TCNT0 = 0;
      22c:	16 bc       	out	0x26, r1	; 38
 		pulse_flag = 0;
-     22e:	10 92 3d 01 	sts	0x013D, r1
-     232:	10 92 3c 01 	sts	0x013C, r1
+     22e:	10 92 33 01 	sts	0x0133, r1
+     232:	10 92 32 01 	sts	0x0132, r1
 	}
 }
      236:	ff 91       	pop	r31
@@ -237,25 +237,25 @@ ISR (TIMER0_OVF_vect)
      26e:	ff 93       	push	r31
 	/* Increase counter at every overflow */
 	count += 255;
-     270:	80 91 36 01 	lds	r24, 0x0136
-     274:	90 91 37 01 	lds	r25, 0x0137
-     278:	a0 91 38 01 	lds	r26, 0x0138
-     27c:	b0 91 39 01 	lds	r27, 0x0139
+     270:	80 91 2c 01 	lds	r24, 0x012C
+     274:	90 91 2d 01 	lds	r25, 0x012D
+     278:	a0 91 2e 01 	lds	r26, 0x012E
+     27c:	b0 91 2f 01 	lds	r27, 0x012F
      280:	81 50       	subi	r24, 0x01	; 1
      282:	9f 4f       	sbci	r25, 0xFF	; 255
      284:	af 4f       	sbci	r26, 0xFF	; 255
      286:	bf 4f       	sbci	r27, 0xFF	; 255
-     288:	80 93 36 01 	sts	0x0136, r24
-     28c:	90 93 37 01 	sts	0x0137, r25
-     290:	a0 93 38 01 	sts	0x0138, r26
-     294:	b0 93 39 01 	sts	0x0139, r27
+     288:	80 93 2c 01 	sts	0x012C, r24
+     28c:	90 93 2d 01 	sts	0x012D, r25
+     290:	a0 93 2e 01 	sts	0x012E, r26
+     294:	b0 93 2f 01 	sts	0x012F, r27
 	
 	/* Check that count hasn't exceeded maximum ping, and adjust */
 	if (count > MAX_PING){
-     298:	60 91 36 01 	lds	r22, 0x0136
-     29c:	70 91 37 01 	lds	r23, 0x0137
-     2a0:	80 91 38 01 	lds	r24, 0x0138
-     2a4:	90 91 39 01 	lds	r25, 0x0139
+     298:	60 91 2c 01 	lds	r22, 0x012C
+     29c:	70 91 2d 01 	lds	r23, 0x012D
+     2a0:	80 91 2e 01 	lds	r24, 0x012E
+     2a4:	90 91 2f 01 	lds	r25, 0x012F
      2a8:	0e 94 65 03 	call	0x6ca	; 0x6ca <__floatunsisf>
      2ac:	20 e0       	ldi	r18, 0x00	; 0
      2ae:	3c e1       	ldi	r19, 0x1C	; 28
@@ -276,23 +276,23 @@ ISR (TIMER0_OVF_vect)
      2ca:	80 83       	st	Z, r24
 		count += TCNT0;
      2cc:	26 b5       	in	r18, 0x26	; 38
-     2ce:	80 91 36 01 	lds	r24, 0x0136
-     2d2:	90 91 37 01 	lds	r25, 0x0137
-     2d6:	a0 91 38 01 	lds	r26, 0x0138
-     2da:	b0 91 39 01 	lds	r27, 0x0139
+     2ce:	80 91 2c 01 	lds	r24, 0x012C
+     2d2:	90 91 2d 01 	lds	r25, 0x012D
+     2d6:	a0 91 2e 01 	lds	r26, 0x012E
+     2da:	b0 91 2f 01 	lds	r27, 0x012F
      2de:	82 0f       	add	r24, r18
      2e0:	91 1d       	adc	r25, r1
      2e2:	a1 1d       	adc	r26, r1
      2e4:	b1 1d       	adc	r27, r1
-     2e6:	80 93 36 01 	sts	0x0136, r24
-     2ea:	90 93 37 01 	sts	0x0137, r25
-     2ee:	a0 93 38 01 	sts	0x0138, r26
-     2f2:	b0 93 39 01 	sts	0x0139, r27
+     2e6:	80 93 2c 01 	sts	0x012C, r24
+     2ea:	90 93 2d 01 	sts	0x012D, r25
+     2ee:	a0 93 2e 01 	sts	0x012E, r26
+     2f2:	b0 93 2f 01 	sts	0x012F, r27
 		TCNT0 = 0;
      2f6:	16 bc       	out	0x26, r1	; 38
 		pulse_flag = 0;
-     2f8:	10 92 3d 01 	sts	0x013D, r1
-     2fc:	10 92 3c 01 	sts	0x013C, r1
+     2f8:	10 92 33 01 	sts	0x0133, r1
+     2fc:	10 92 32 01 	sts	0x0132, r1
 	}
 }
      300:	ff 91       	pop	r31
@@ -328,12 +328,12 @@ ISR (USART_RX_vect)
 	/* Set usart flag to send distance info when call is received over USART */
 	data = UDR0;
      330:	80 91 c6 00 	lds	r24, 0x00C6
-     334:	80 93 3e 01 	sts	0x013E, r24
+     334:	80 93 34 01 	sts	0x0134, r24
 	usart_flag = 1;
      338:	81 e0       	ldi	r24, 0x01	; 1
      33a:	90 e0       	ldi	r25, 0x00	; 0
-     33c:	90 93 3b 01 	sts	0x013B, r25
-     340:	80 93 3a 01 	sts	0x013A, r24
+     33c:	90 93 31 01 	sts	0x0131, r25
+     340:	80 93 30 01 	sts	0x0130, r24
 }
      344:	9f 91       	pop	r25
      346:	8f 91       	pop	r24
@@ -399,8 +399,8 @@ float get_distance(void)
      378:	ad e6       	ldi	r26, 0x6D	; 109
      37a:	b0 e0       	ldi	r27, 0x00	; 0
      37c:	4c 91       	ld	r20, X
-     37e:	e0 91 34 01 	lds	r30, 0x0134
-     382:	f0 91 35 01 	lds	r31, 0x0135
+     37e:	e0 91 2a 01 	lds	r30, 0x012A
+     382:	f0 91 2b 01 	lds	r31, 0x012B
      386:	e0 50       	subi	r30, 0x00	; 0
      388:	ff 4f       	sbci	r31, 0xFF	; 255
      38a:	21 e0       	ldi	r18, 0x01	; 1
@@ -440,11 +440,11 @@ float get_distance(void)
 	
 	/* Wait until echo is done receiving pulse */
 	pulse_flag = 1;
-     3b4:	30 93 3d 01 	sts	0x013D, r19
-     3b8:	20 93 3c 01 	sts	0x013C, r18
+     3b4:	30 93 33 01 	sts	0x0133, r19
+     3b8:	20 93 32 01 	sts	0x0132, r18
 	while (pulse_flag);
-     3bc:	80 91 3c 01 	lds	r24, 0x013C
-     3c0:	90 91 3d 01 	lds	r25, 0x013D
+     3bc:	80 91 32 01 	lds	r24, 0x0132
+     3c0:	90 91 33 01 	lds	r25, 0x0133
      3c4:	89 2b       	or	r24, r25
      3c6:	d1 f7       	brne	.-12     	; 0x3bc <get_distance+0x48>
 	
@@ -455,8 +455,8 @@ float get_distance(void)
      3ca:	ad e6       	ldi	r26, 0x6D	; 109
      3cc:	b0 e0       	ldi	r27, 0x00	; 0
      3ce:	2c 91       	ld	r18, X
-     3d0:	e0 91 34 01 	lds	r30, 0x0134
-     3d4:	f0 91 35 01 	lds	r31, 0x0135
+     3d0:	e0 91 2a 01 	lds	r30, 0x012A
+     3d4:	f0 91 2b 01 	lds	r31, 0x012B
      3d8:	e0 50       	subi	r30, 0x00	; 0
      3da:	ff 4f       	sbci	r31, 0xFF	; 255
      3dc:	81 e0       	ldi	r24, 0x01	; 1
@@ -475,10 +475,10 @@ float get_distance(void)
 	
 	/* Check that maximum number of clock cycles hasn't been exceeded */
 	if (count > MAX_PING || count == 0)
-     3f4:	60 91 36 01 	lds	r22, 0x0136
-     3f8:	70 91 37 01 	lds	r23, 0x0137
-     3fc:	80 91 38 01 	lds	r24, 0x0138
-     400:	90 91 39 01 	lds	r25, 0x0139
+     3f4:	60 91 2c 01 	lds	r22, 0x012C
+     3f8:	70 91 2d 01 	lds	r23, 0x012D
+     3fc:	80 91 2e 01 	lds	r24, 0x012E
+     400:	90 91 2f 01 	lds	r25, 0x012F
      404:	0e 94 65 03 	call	0x6ca	; 0x6ca <__floatunsisf>
      408:	20 e0       	ldi	r18, 0x00	; 0
      40a:	3c e1       	ldi	r19, 0x1C	; 28
@@ -487,10 +487,10 @@ float get_distance(void)
      410:	0e 94 f3 03 	call	0x7e6	; 0x7e6 <__gesf2>
      414:	18 16       	cp	r1, r24
      416:	64 f0       	brlt	.+24     	; 0x430 <get_distance+0xbc>
-     418:	80 91 36 01 	lds	r24, 0x0136
-     41c:	90 91 37 01 	lds	r25, 0x0137
-     420:	a0 91 38 01 	lds	r26, 0x0138
-     424:	b0 91 39 01 	lds	r27, 0x0139
+     418:	80 91 2c 01 	lds	r24, 0x012C
+     41c:	90 91 2d 01 	lds	r25, 0x012D
+     420:	a0 91 2e 01 	lds	r26, 0x012E
+     424:	b0 91 2f 01 	lds	r27, 0x012F
      428:	89 2b       	or	r24, r25
      42a:	8a 2b       	or	r24, r26
      42c:	8b 2b       	or	r24, r27
@@ -500,22 +500,22 @@ float get_distance(void)
      432:	90 eb       	ldi	r25, 0xB0	; 176
      434:	a5 e0       	ldi	r26, 0x05	; 5
      436:	b0 e0       	ldi	r27, 0x00	; 0
-     438:	80 93 36 01 	sts	0x0136, r24
-     43c:	90 93 37 01 	sts	0x0137, r25
-     440:	a0 93 38 01 	sts	0x0138, r26
-     444:	b0 93 39 01 	sts	0x0139, r27
+     438:	80 93 2c 01 	sts	0x012C, r24
+     43c:	90 93 2d 01 	sts	0x012D, r25
+     440:	a0 93 2e 01 	sts	0x012E, r26
+     444:	b0 93 2f 01 	sts	0x012F, r27
 	
 	/* pulse width time / ((microseconds per centimetre for speed of sound) * 2) */
 	float dist = (double) count * US_PER_CLK / US_PER_CM_2;
-     448:	60 91 36 01 	lds	r22, 0x0136
-     44c:	70 91 37 01 	lds	r23, 0x0137
-     450:	80 91 38 01 	lds	r24, 0x0138
-     454:	90 91 39 01 	lds	r25, 0x0139
+     448:	60 91 2c 01 	lds	r22, 0x012C
+     44c:	70 91 2d 01 	lds	r23, 0x012D
+     450:	80 91 2e 01 	lds	r24, 0x012E
+     454:	90 91 2f 01 	lds	r25, 0x012F
 	count = 0;
-     458:	10 92 36 01 	sts	0x0136, r1
-     45c:	10 92 37 01 	sts	0x0137, r1
-     460:	10 92 38 01 	sts	0x0138, r1
-     464:	10 92 39 01 	sts	0x0139, r1
+     458:	10 92 2c 01 	sts	0x012C, r1
+     45c:	10 92 2d 01 	sts	0x012D, r1
+     460:	10 92 2e 01 	sts	0x012E, r1
+     464:	10 92 2f 01 	sts	0x012F, r1
 	/* Check that maximum number of clock cycles hasn't been exceeded */
 	if (count > MAX_PING || count == 0)
 		count = MAX_PING;
@@ -574,137 +574,135 @@ int main(void)
      4b4:	1d 92       	st	X+, r1
      4b6:	8a 95       	dec	r24
      4b8:	e9 f7       	brne	.-6      	; 0x4b4 <main+0x2e>
-	
-	while (1){
+     4ba:	6e 01       	movw	r12, r28
+     4bc:	bd e0       	ldi	r27, 0x0D	; 13
+     4be:	cb 0e       	add	r12, r27
+     4c0:	d1 1c       	adc	r13, r1
 		distance[sensor_id] = get_distance();
 		
 		/* Send distance information over USART if usart_flag is set */
 		if (usart_flag){
-     4ba:	a1 2c       	mov	r10, r1
-     4bc:	b1 2c       	mov	r11, r1
 			for(int i = 0; i < SENSORS; i++){
-				printf("Sensor %d: %.2f\n", i, distance[i]);
-     4be:	0f 2e       	mov	r0, r31
-     4c0:	f2 e2       	ldi	r31, 0x22	; 34
-     4c2:	cf 2e       	mov	r12, r31
-     4c4:	f1 e0       	ldi	r31, 0x01	; 1
-     4c6:	df 2e       	mov	r13, r31
-     4c8:	f0 2d       	mov	r31, r0
+				printf("%.2f, ",distance[i]);
+     4c2:	0f 2e       	mov	r0, r31
+     4c4:	f2 e2       	ldi	r31, 0x22	; 34
+     4c6:	ef 2e       	mov	r14, r31
+     4c8:	f1 e0       	ldi	r31, 0x01	; 1
+     4ca:	ff 2e       	mov	r15, r31
+     4cc:	f0 2d       	mov	r31, r0
 	sei();
 	
 	float distance[SENSORS] = {0.00};
 	
 	while (1){
 		distance[sensor_id] = get_distance();
-     4ca:	00 91 34 01 	lds	r16, 0x0134
-     4ce:	10 91 35 01 	lds	r17, 0x0135
-     4d2:	0e 94 ba 01 	call	0x374	; 0x374 <get_distance>
-     4d6:	00 0f       	add	r16, r16
-     4d8:	11 1f       	adc	r17, r17
+     4ce:	00 91 2a 01 	lds	r16, 0x012A
+     4d2:	10 91 2b 01 	lds	r17, 0x012B
+     4d6:	0e 94 ba 01 	call	0x374	; 0x374 <get_distance>
      4da:	00 0f       	add	r16, r16
      4dc:	11 1f       	adc	r17, r17
-     4de:	e1 e0       	ldi	r30, 0x01	; 1
-     4e0:	f0 e0       	ldi	r31, 0x00	; 0
-     4e2:	ec 0f       	add	r30, r28
-     4e4:	fd 1f       	adc	r31, r29
-     4e6:	e0 0f       	add	r30, r16
-     4e8:	f1 1f       	adc	r31, r17
-     4ea:	60 83       	st	Z, r22
-     4ec:	71 83       	std	Z+1, r23	; 0x01
-     4ee:	82 83       	std	Z+2, r24	; 0x02
-     4f0:	93 83       	std	Z+3, r25	; 0x03
+     4de:	00 0f       	add	r16, r16
+     4e0:	11 1f       	adc	r17, r17
+     4e2:	e1 e0       	ldi	r30, 0x01	; 1
+     4e4:	f0 e0       	ldi	r31, 0x00	; 0
+     4e6:	ec 0f       	add	r30, r28
+     4e8:	fd 1f       	adc	r31, r29
+     4ea:	e0 0f       	add	r30, r16
+     4ec:	f1 1f       	adc	r31, r17
+     4ee:	60 83       	st	Z, r22
+     4f0:	71 83       	std	Z+1, r23	; 0x01
+     4f2:	82 83       	std	Z+2, r24	; 0x02
+     4f4:	93 83       	std	Z+3, r25	; 0x03
 		
 		/* Send distance information over USART if usart_flag is set */
 		if (usart_flag){
-     4f2:	80 91 3a 01 	lds	r24, 0x013A
-     4f6:	90 91 3b 01 	lds	r25, 0x013B
-     4fa:	89 2b       	or	r24, r25
-     4fc:	29 f1       	breq	.+74     	; 0x548 <main+0xc2>
-     4fe:	8e 01       	movw	r16, r28
-     500:	0f 5f       	subi	r16, 0xFF	; 255
-     502:	1f 4f       	sbci	r17, 0xFF	; 255
-     504:	75 01       	movw	r14, r10
+     4f6:	80 91 30 01 	lds	r24, 0x0130
+     4fa:	90 91 31 01 	lds	r25, 0x0131
+     4fe:	89 2b       	or	r24, r25
+     500:	19 f1       	breq	.+70     	; 0x548 <main+0xc2>
+     502:	8e 01       	movw	r16, r28
+     504:	0f 5f       	subi	r16, 0xFF	; 255
+     506:	1f 4f       	sbci	r17, 0xFF	; 255
 			for(int i = 0; i < SENSORS; i++){
-				printf("Sensor %d: %.2f\n", i, distance[i]);
-     506:	f8 01       	movw	r30, r16
-     508:	80 81       	ld	r24, Z
-     50a:	91 81       	ldd	r25, Z+1	; 0x01
-     50c:	22 81       	ldd	r18, Z+2	; 0x02
-     50e:	33 81       	ldd	r19, Z+3	; 0x03
-     510:	0c 5f       	subi	r16, 0xFC	; 252
-     512:	1f 4f       	sbci	r17, 0xFF	; 255
-     514:	3f 93       	push	r19
-     516:	2f 93       	push	r18
-     518:	9f 93       	push	r25
-     51a:	8f 93       	push	r24
-     51c:	ff 92       	push	r15
-     51e:	ef 92       	push	r14
-     520:	df 92       	push	r13
-     522:	cf 92       	push	r12
-     524:	0e 94 62 09 	call	0x12c4	; 0x12c4 <printf>
+				printf("%.2f, ",distance[i]);
+     508:	f8 01       	movw	r30, r16
+     50a:	80 81       	ld	r24, Z
+     50c:	91 81       	ldd	r25, Z+1	; 0x01
+     50e:	22 81       	ldd	r18, Z+2	; 0x02
+     510:	33 81       	ldd	r19, Z+3	; 0x03
+     512:	0c 5f       	subi	r16, 0xFC	; 252
+     514:	1f 4f       	sbci	r17, 0xFF	; 255
+     516:	3f 93       	push	r19
+     518:	2f 93       	push	r18
+     51a:	9f 93       	push	r25
+     51c:	8f 93       	push	r24
+     51e:	ff 92       	push	r15
+     520:	ef 92       	push	r14
+     522:	0e 94 62 09 	call	0x12c4	; 0x12c4 <printf>
 	while (1){
 		distance[sensor_id] = get_distance();
 		
 		/* Send distance information over USART if usart_flag is set */
 		if (usart_flag){
 			for(int i = 0; i < SENSORS; i++){
-     528:	ff ef       	ldi	r31, 0xFF	; 255
-     52a:	ef 1a       	sub	r14, r31
-     52c:	ff 0a       	sbc	r15, r31
-     52e:	0f b6       	in	r0, 0x3f	; 63
-     530:	f8 94       	cli
-     532:	de bf       	out	0x3e, r29	; 62
-     534:	0f be       	out	0x3f, r0	; 63
-     536:	cd bf       	out	0x3d, r28	; 61
-     538:	93 e0       	ldi	r25, 0x03	; 3
-     53a:	e9 16       	cp	r14, r25
-     53c:	f1 04       	cpc	r15, r1
-     53e:	19 f7       	brne	.-58     	; 0x506 <main+0x80>
-				printf("Sensor %d: %.2f\n", i, distance[i]);
+     526:	0f 90       	pop	r0
+     528:	0f 90       	pop	r0
+     52a:	0f 90       	pop	r0
+     52c:	0f 90       	pop	r0
+     52e:	0f 90       	pop	r0
+     530:	0f 90       	pop	r0
+     532:	0c 15       	cp	r16, r12
+     534:	1d 05       	cpc	r17, r13
+     536:	41 f7       	brne	.-48     	; 0x508 <main+0x82>
+				printf("%.2f, ",distance[i]);
 			}
+			printf("\n");
+     538:	8a e0       	ldi	r24, 0x0A	; 10
+     53a:	90 e0       	ldi	r25, 0x00	; 0
+     53c:	0e 94 78 09 	call	0x12f0	; 0x12f0 <putchar>
 			usart_flag = 0;
-     540:	b0 92 3b 01 	sts	0x013B, r11
-     544:	a0 92 3a 01 	sts	0x013A, r10
+     540:	10 92 31 01 	sts	0x0131, r1
+     544:	10 92 30 01 	sts	0x0130, r1
 		}
 		
 		/* Increase sensor_id to move onto the next sensor */
 		sensor_id++;
-     548:	80 91 34 01 	lds	r24, 0x0134
-     54c:	90 91 35 01 	lds	r25, 0x0135
+     548:	80 91 2a 01 	lds	r24, 0x012A
+     54c:	90 91 2b 01 	lds	r25, 0x012B
      550:	01 96       	adiw	r24, 0x01	; 1
 		if (sensor_id > (SENSORS - 1))
      552:	83 30       	cpi	r24, 0x03	; 3
      554:	91 05       	cpc	r25, r1
      556:	2c f4       	brge	.+10     	; 0x562 <main+0xdc>
-			}
+			printf("\n");
 			usart_flag = 0;
 		}
 		
 		/* Increase sensor_id to move onto the next sensor */
 		sensor_id++;
-     558:	90 93 35 01 	sts	0x0135, r25
-     55c:	80 93 34 01 	sts	0x0134, r24
+     558:	90 93 2b 01 	sts	0x012B, r25
+     55c:	80 93 2a 01 	sts	0x012A, r24
      560:	04 c0       	rjmp	.+8      	; 0x56a <main+0xe4>
 		if (sensor_id > (SENSORS - 1))
 			sensor_id = 0;
-     562:	b0 92 35 01 	sts	0x0135, r11
-     566:	a0 92 34 01 	sts	0x0134, r10
+     562:	10 92 2b 01 	sts	0x012B, r1
+     566:	10 92 2a 01 	sts	0x012A, r1
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-     56a:	af ef       	ldi	r26, 0xFF	; 255
-     56c:	b1 ee       	ldi	r27, 0xE1	; 225
-     56e:	e4 e0       	ldi	r30, 0x04	; 4
-     570:	a1 50       	subi	r26, 0x01	; 1
-     572:	b0 40       	sbci	r27, 0x00	; 0
-     574:	e0 40       	sbci	r30, 0x00	; 0
+     56a:	ff ef       	ldi	r31, 0xFF	; 255
+     56c:	21 ee       	ldi	r18, 0xE1	; 225
+     56e:	84 e0       	ldi	r24, 0x04	; 4
+     570:	f1 50       	subi	r31, 0x01	; 1
+     572:	20 40       	sbci	r18, 0x00	; 0
+     574:	80 40       	sbci	r24, 0x00	; 0
      576:	e1 f7       	brne	.-8      	; 0x570 <main+0xea>
      578:	00 c0       	rjmp	.+0      	; 0x57a <main+0xf4>
      57a:	00 00       	nop
-     57c:	a6 cf       	rjmp	.-180    	; 0x4ca <main+0x44>
+     57c:	a8 cf       	rjmp	.-176    	; 0x4ce <main+0x48>
 
 0000057e <uart_putchar>:
 		stdout = &uart_output;	//redirect standard output to uart
@@ -785,7 +783,7 @@ void uart_init(void) {
 void io_redirect(void){
 		
 		stdout = &uart_output;	//redirect standard output to uart
-     5d0:	ef e3       	ldi	r30, 0x3F	; 63
+     5d0:	e5 e3       	ldi	r30, 0x35	; 53
      5d2:	f1 e0       	ldi	r31, 0x01	; 1
      5d4:	84 e1       	ldi	r24, 0x14	; 20
      5d6:	91 e0       	ldi	r25, 0x01	; 1
@@ -1833,7 +1831,7 @@ void io_redirect(void){
      df8:	2a e0       	ldi	r18, 0x0A	; 10
      dfa:	30 e0       	ldi	r19, 0x00	; 0
      dfc:	a3 01       	movw	r20, r6
-     dfe:	0e 94 78 09 	call	0x12f0	; 0x12f0 <__ultoa_invert>
+     dfe:	0e 94 7f 09 	call	0x12fe	; 0x12fe <__ultoa_invert>
      e02:	e8 2e       	mov	r14, r24
      e04:	e6 18       	sub	r14, r6
      e06:	3f c0       	rjmp	.+126    	; 0xe86 <vfprintf+0x574>
@@ -1894,7 +1892,7 @@ void io_redirect(void){
      e74:	80 e0       	ldi	r24, 0x00	; 0
      e76:	90 e0       	ldi	r25, 0x00	; 0
      e78:	a3 01       	movw	r20, r6
-     e7a:	0e 94 78 09 	call	0x12f0	; 0x12f0 <__ultoa_invert>
+     e7a:	0e 94 7f 09 	call	0x12fe	; 0x12fe <__ultoa_invert>
      e7e:	e8 2e       	mov	r14, r24
      e80:	e6 18       	sub	r14, r6
      e82:	0f 77       	andi	r16, 0x7F	; 127
@@ -2458,110 +2456,116 @@ void io_redirect(void){
     12d8:	61 91       	ld	r22, Z+
     12da:	71 91       	ld	r23, Z+
     12dc:	af 01       	movw	r20, r30
-    12de:	80 91 41 01 	lds	r24, 0x0141
-    12e2:	90 91 42 01 	lds	r25, 0x0142
+    12de:	80 91 37 01 	lds	r24, 0x0137
+    12e2:	90 91 38 01 	lds	r25, 0x0138
     12e6:	0e 94 89 04 	call	0x912	; 0x912 <vfprintf>
     12ea:	e2 e0       	ldi	r30, 0x02	; 2
     12ec:	0c 94 31 08 	jmp	0x1062	; 0x1062 <__epilogue_restores__+0x20>
 
-000012f0 <__ultoa_invert>:
-    12f0:	fa 01       	movw	r30, r20
-    12f2:	aa 27       	eor	r26, r26
-    12f4:	28 30       	cpi	r18, 0x08	; 8
-    12f6:	51 f1       	breq	.+84     	; 0x134c <__ultoa_invert+0x5c>
-    12f8:	20 31       	cpi	r18, 0x10	; 16
-    12fa:	81 f1       	breq	.+96     	; 0x135c <__ultoa_invert+0x6c>
-    12fc:	e8 94       	clt
-    12fe:	6f 93       	push	r22
-    1300:	6e 7f       	andi	r22, 0xFE	; 254
-    1302:	6e 5f       	subi	r22, 0xFE	; 254
-    1304:	7f 4f       	sbci	r23, 0xFF	; 255
-    1306:	8f 4f       	sbci	r24, 0xFF	; 255
-    1308:	9f 4f       	sbci	r25, 0xFF	; 255
-    130a:	af 4f       	sbci	r26, 0xFF	; 255
-    130c:	b1 e0       	ldi	r27, 0x01	; 1
-    130e:	3e d0       	rcall	.+124    	; 0x138c <__ultoa_invert+0x9c>
-    1310:	b4 e0       	ldi	r27, 0x04	; 4
-    1312:	3c d0       	rcall	.+120    	; 0x138c <__ultoa_invert+0x9c>
-    1314:	67 0f       	add	r22, r23
-    1316:	78 1f       	adc	r23, r24
-    1318:	89 1f       	adc	r24, r25
-    131a:	9a 1f       	adc	r25, r26
-    131c:	a1 1d       	adc	r26, r1
-    131e:	68 0f       	add	r22, r24
-    1320:	79 1f       	adc	r23, r25
-    1322:	8a 1f       	adc	r24, r26
-    1324:	91 1d       	adc	r25, r1
-    1326:	a1 1d       	adc	r26, r1
-    1328:	6a 0f       	add	r22, r26
-    132a:	71 1d       	adc	r23, r1
-    132c:	81 1d       	adc	r24, r1
-    132e:	91 1d       	adc	r25, r1
-    1330:	a1 1d       	adc	r26, r1
-    1332:	20 d0       	rcall	.+64     	; 0x1374 <__ultoa_invert+0x84>
-    1334:	09 f4       	brne	.+2      	; 0x1338 <__ultoa_invert+0x48>
-    1336:	68 94       	set
-    1338:	3f 91       	pop	r19
-    133a:	2a e0       	ldi	r18, 0x0A	; 10
-    133c:	26 9f       	mul	r18, r22
-    133e:	11 24       	eor	r1, r1
-    1340:	30 19       	sub	r19, r0
-    1342:	30 5d       	subi	r19, 0xD0	; 208
-    1344:	31 93       	st	Z+, r19
-    1346:	de f6       	brtc	.-74     	; 0x12fe <__ultoa_invert+0xe>
-    1348:	cf 01       	movw	r24, r30
-    134a:	08 95       	ret
-    134c:	46 2f       	mov	r20, r22
-    134e:	47 70       	andi	r20, 0x07	; 7
-    1350:	40 5d       	subi	r20, 0xD0	; 208
-    1352:	41 93       	st	Z+, r20
-    1354:	b3 e0       	ldi	r27, 0x03	; 3
-    1356:	0f d0       	rcall	.+30     	; 0x1376 <__ultoa_invert+0x86>
-    1358:	c9 f7       	brne	.-14     	; 0x134c <__ultoa_invert+0x5c>
-    135a:	f6 cf       	rjmp	.-20     	; 0x1348 <__ultoa_invert+0x58>
-    135c:	46 2f       	mov	r20, r22
-    135e:	4f 70       	andi	r20, 0x0F	; 15
-    1360:	40 5d       	subi	r20, 0xD0	; 208
-    1362:	4a 33       	cpi	r20, 0x3A	; 58
-    1364:	18 f0       	brcs	.+6      	; 0x136c <__ultoa_invert+0x7c>
-    1366:	49 5d       	subi	r20, 0xD9	; 217
-    1368:	31 fd       	sbrc	r19, 1
-    136a:	40 52       	subi	r20, 0x20	; 32
-    136c:	41 93       	st	Z+, r20
-    136e:	02 d0       	rcall	.+4      	; 0x1374 <__ultoa_invert+0x84>
-    1370:	a9 f7       	brne	.-22     	; 0x135c <__ultoa_invert+0x6c>
-    1372:	ea cf       	rjmp	.-44     	; 0x1348 <__ultoa_invert+0x58>
-    1374:	b4 e0       	ldi	r27, 0x04	; 4
-    1376:	a6 95       	lsr	r26
-    1378:	97 95       	ror	r25
-    137a:	87 95       	ror	r24
-    137c:	77 95       	ror	r23
-    137e:	67 95       	ror	r22
-    1380:	ba 95       	dec	r27
-    1382:	c9 f7       	brne	.-14     	; 0x1376 <__ultoa_invert+0x86>
-    1384:	00 97       	sbiw	r24, 0x00	; 0
-    1386:	61 05       	cpc	r22, r1
-    1388:	71 05       	cpc	r23, r1
-    138a:	08 95       	ret
-    138c:	9b 01       	movw	r18, r22
-    138e:	ac 01       	movw	r20, r24
-    1390:	0a 2e       	mov	r0, r26
-    1392:	06 94       	lsr	r0
-    1394:	57 95       	ror	r21
-    1396:	47 95       	ror	r20
-    1398:	37 95       	ror	r19
-    139a:	27 95       	ror	r18
-    139c:	ba 95       	dec	r27
-    139e:	c9 f7       	brne	.-14     	; 0x1392 <__ultoa_invert+0xa2>
-    13a0:	62 0f       	add	r22, r18
-    13a2:	73 1f       	adc	r23, r19
-    13a4:	84 1f       	adc	r24, r20
-    13a6:	95 1f       	adc	r25, r21
-    13a8:	a0 1d       	adc	r26, r0
-    13aa:	08 95       	ret
+000012f0 <putchar>:
+    12f0:	60 91 37 01 	lds	r22, 0x0137
+    12f4:	70 91 38 01 	lds	r23, 0x0138
+    12f8:	0e 94 2a 09 	call	0x1254	; 0x1254 <fputc>
+    12fc:	08 95       	ret
 
-000013ac <_exit>:
-    13ac:	f8 94       	cli
+000012fe <__ultoa_invert>:
+    12fe:	fa 01       	movw	r30, r20
+    1300:	aa 27       	eor	r26, r26
+    1302:	28 30       	cpi	r18, 0x08	; 8
+    1304:	51 f1       	breq	.+84     	; 0x135a <__ultoa_invert+0x5c>
+    1306:	20 31       	cpi	r18, 0x10	; 16
+    1308:	81 f1       	breq	.+96     	; 0x136a <__ultoa_invert+0x6c>
+    130a:	e8 94       	clt
+    130c:	6f 93       	push	r22
+    130e:	6e 7f       	andi	r22, 0xFE	; 254
+    1310:	6e 5f       	subi	r22, 0xFE	; 254
+    1312:	7f 4f       	sbci	r23, 0xFF	; 255
+    1314:	8f 4f       	sbci	r24, 0xFF	; 255
+    1316:	9f 4f       	sbci	r25, 0xFF	; 255
+    1318:	af 4f       	sbci	r26, 0xFF	; 255
+    131a:	b1 e0       	ldi	r27, 0x01	; 1
+    131c:	3e d0       	rcall	.+124    	; 0x139a <__ultoa_invert+0x9c>
+    131e:	b4 e0       	ldi	r27, 0x04	; 4
+    1320:	3c d0       	rcall	.+120    	; 0x139a <__ultoa_invert+0x9c>
+    1322:	67 0f       	add	r22, r23
+    1324:	78 1f       	adc	r23, r24
+    1326:	89 1f       	adc	r24, r25
+    1328:	9a 1f       	adc	r25, r26
+    132a:	a1 1d       	adc	r26, r1
+    132c:	68 0f       	add	r22, r24
+    132e:	79 1f       	adc	r23, r25
+    1330:	8a 1f       	adc	r24, r26
+    1332:	91 1d       	adc	r25, r1
+    1334:	a1 1d       	adc	r26, r1
+    1336:	6a 0f       	add	r22, r26
+    1338:	71 1d       	adc	r23, r1
+    133a:	81 1d       	adc	r24, r1
+    133c:	91 1d       	adc	r25, r1
+    133e:	a1 1d       	adc	r26, r1
+    1340:	20 d0       	rcall	.+64     	; 0x1382 <__ultoa_invert+0x84>
+    1342:	09 f4       	brne	.+2      	; 0x1346 <__ultoa_invert+0x48>
+    1344:	68 94       	set
+    1346:	3f 91       	pop	r19
+    1348:	2a e0       	ldi	r18, 0x0A	; 10
+    134a:	26 9f       	mul	r18, r22
+    134c:	11 24       	eor	r1, r1
+    134e:	30 19       	sub	r19, r0
+    1350:	30 5d       	subi	r19, 0xD0	; 208
+    1352:	31 93       	st	Z+, r19
+    1354:	de f6       	brtc	.-74     	; 0x130c <__ultoa_invert+0xe>
+    1356:	cf 01       	movw	r24, r30
+    1358:	08 95       	ret
+    135a:	46 2f       	mov	r20, r22
+    135c:	47 70       	andi	r20, 0x07	; 7
+    135e:	40 5d       	subi	r20, 0xD0	; 208
+    1360:	41 93       	st	Z+, r20
+    1362:	b3 e0       	ldi	r27, 0x03	; 3
+    1364:	0f d0       	rcall	.+30     	; 0x1384 <__ultoa_invert+0x86>
+    1366:	c9 f7       	brne	.-14     	; 0x135a <__ultoa_invert+0x5c>
+    1368:	f6 cf       	rjmp	.-20     	; 0x1356 <__ultoa_invert+0x58>
+    136a:	46 2f       	mov	r20, r22
+    136c:	4f 70       	andi	r20, 0x0F	; 15
+    136e:	40 5d       	subi	r20, 0xD0	; 208
+    1370:	4a 33       	cpi	r20, 0x3A	; 58
+    1372:	18 f0       	brcs	.+6      	; 0x137a <__ultoa_invert+0x7c>
+    1374:	49 5d       	subi	r20, 0xD9	; 217
+    1376:	31 fd       	sbrc	r19, 1
+    1378:	40 52       	subi	r20, 0x20	; 32
+    137a:	41 93       	st	Z+, r20
+    137c:	02 d0       	rcall	.+4      	; 0x1382 <__ultoa_invert+0x84>
+    137e:	a9 f7       	brne	.-22     	; 0x136a <__ultoa_invert+0x6c>
+    1380:	ea cf       	rjmp	.-44     	; 0x1356 <__ultoa_invert+0x58>
+    1382:	b4 e0       	ldi	r27, 0x04	; 4
+    1384:	a6 95       	lsr	r26
+    1386:	97 95       	ror	r25
+    1388:	87 95       	ror	r24
+    138a:	77 95       	ror	r23
+    138c:	67 95       	ror	r22
+    138e:	ba 95       	dec	r27
+    1390:	c9 f7       	brne	.-14     	; 0x1384 <__ultoa_invert+0x86>
+    1392:	00 97       	sbiw	r24, 0x00	; 0
+    1394:	61 05       	cpc	r22, r1
+    1396:	71 05       	cpc	r23, r1
+    1398:	08 95       	ret
+    139a:	9b 01       	movw	r18, r22
+    139c:	ac 01       	movw	r20, r24
+    139e:	0a 2e       	mov	r0, r26
+    13a0:	06 94       	lsr	r0
+    13a2:	57 95       	ror	r21
+    13a4:	47 95       	ror	r20
+    13a6:	37 95       	ror	r19
+    13a8:	27 95       	ror	r18
+    13aa:	ba 95       	dec	r27
+    13ac:	c9 f7       	brne	.-14     	; 0x13a0 <__ultoa_invert+0xa2>
+    13ae:	62 0f       	add	r22, r18
+    13b0:	73 1f       	adc	r23, r19
+    13b2:	84 1f       	adc	r24, r20
+    13b4:	95 1f       	adc	r25, r21
+    13b6:	a0 1d       	adc	r26, r0
+    13b8:	08 95       	ret
 
-000013ae <__stop_program>:
-    13ae:	ff cf       	rjmp	.-2      	; 0x13ae <__stop_program>
+000013ba <_exit>:
+    13ba:	f8 94       	cli
+
+000013bc <__stop_program>:
+    13bc:	ff cf       	rjmp	.-2      	; 0x13bc <__stop_program>
