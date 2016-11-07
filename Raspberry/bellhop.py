@@ -1,5 +1,8 @@
 from math import sin, cos, atan2
 import serial
+from numpy import array
+from numpy.linalg import solve
+import json
 
 
 class Ping():
@@ -9,19 +12,29 @@ class Ping():
         self.beta = beta
         self.gamma = gamma
         self.d = 0  # reading
+        self.arduino = arduino
 
     def point(self):
         """Return x, y coordinates with respect to own coordinate system"""
-        x, y = self.r * cos(self.beta), self.r * sin(self.beta)
+        x, y = self.r * sin(self.beta), self.r * cos(self.beta)
         return x, y
 
     def measurement_point(self):
         """Retrun x, y coordinates of measured point with respect to own
         coordinate system"""
         x, y = self.point()
-        xm = x + self.d * cos(self.gamma)
-        ym = y + self.d * sin(self.gamma)
+        xm = x + self.d * sin(self.gamma)
+        ym = y + self.d * cos(self.gamma)
         return xm, ym
+
+    def update(self):
+        self.d = self.arduino.measurements[self.id]
+
+    def vect(self):
+        """Return vector representation of measurement line"""
+        x0, y0 = self.r * sin(self.beta), self.r * cos(self.gamma)
+        xv, yv = self.d * sin(self.gamma), self.d * cos(self.gamma)
+        return x0, y0, xv, yv
 
 
 class Bellhop():
@@ -33,6 +46,15 @@ class Bellhop():
         self.arduino = arduino
         # List of attached ultrasonic sensors
         self.sensors = []
+        self.map = Map('map.json')
+
+    def measurement_vector(self, sensor: Ping):
+        """Return vector representation of measurement line"""
+        x0 = self.x + sensor.r * sin(self.alpha + sensor.beta)
+        y0 = self.y + sensor.r * cos(self.alpha + sensor.beta)
+        xv = sensor.d * sin(self.alpha + sensor.gamma)
+        yv = sensor.d * cos(self.alpha + sensor.gamma)
+        return x0, y0, xv, yv
 
     def sensor_point(self, sensor: Ping):
         """Return x, y coordinates of a sensor with respect to
@@ -50,7 +72,7 @@ class Bellhop():
         return x, y
 
     def update_position(self, x, y):
-        '''Updates position of bellhop based on new position x, y'''
+        """Updates position of bellhop based on new position x, y"""
         self.x = x
         self.y = y
 
@@ -69,10 +91,61 @@ class Bellhop():
         return dx, dy, dalpha
 
 
+class Map():
+    def __init__(self, file='map.json'):
+        with open(file) as f:
+            self.walls = json.load(f)
+
+    def infront(self, line):
+        """Generate walls which are in front of a line"""
+        for wall in self.walls:
+            wall_v = self.wall_vector(wall)
+            point = self.intersection(line, wall_v)
+            if (point[0] >= 0 and line[0] >= 0):
+                xs = [wall[0], wall[2]]
+                ys = [wall[1], wall[3]]
+                in_xs = point[0] <= max(xs) and point[0] >= min(xs)
+                in_ys = point[1] <= max(ys) and point[1] >= min(ys)
+                if (in_xs or in_ys):
+                    yield wall
+
+    def closest(self, line):
+        """Return closest wall infront of a line"""
+        d = 0
+        x, y = line[0], line[1]
+        for wall in self.infront(line):
+            wall_v = self.wall_vector(wall)
+            point = self.intersection(line, wall_v)
+            dist = ((x - point[0])**2 + (y - point[1])**2) ** 0.5
+            if dist > d:
+                closest = wall
+        return closest
+
+    @staticmethod
+    def intersection(line1, line2):
+        """Return point of intersection of two lines"""
+        a = array([[line2[2], -line1[2]],
+                   [line2[3], -line1[3]]])
+        b = array([[line1[0] - line2[0]],
+                   [line1[1] - line2[1]]])
+        co = solve(a, b)
+
+        x = line2[0] + co[0][0] * line2[2]
+        y = line2[1] + co[0][0] * line2[3]
+        return x, y
+
+    @staticmethod
+    def wall_vector(wall):
+        """Return vector representation of wall line"""
+        x0, y0 = wall[0], wall[1]
+        xv, yv = wall[2] - wall[0], wall[1] - wall[3]
+        return x0, y0, xv, yv
+
+
 class Arduino():
     def __init__(self, PORT):
-#        self.serial = serial.Serial(PORT)
-#        self.reading = []
+        self.serial = serial.Serial(PORT)
+        self.measurements = []
         pass
 
     def sensor_data(self, id):

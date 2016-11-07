@@ -1,6 +1,6 @@
 from tkinter import Canvas, Tk, StringVar
 from tkinter.ttk import Frame, Button, Entry, Label
-from math import pi, atan2, sin, cos
+from math import pi, sin, cos
 import bellhop as hop
 
 
@@ -53,59 +53,48 @@ class Application(Frame):
         self.canvas.create_rectangle(*cords, fill='white', tags='hop')
 
         self.readings = []
+        self.trail = []
         for sensor in self.bellhop.sensors:
-            sensor.d = 50
-            x1, y1 = self.bellhop.sensor_point(sensor)
-            x2, y2 = self.bellhop.sensor_measurement(sensor)
-            cords = x1, y1, x2, y2
-            cords = self.inversey(cords)
-            self.canvas.create_line(*cords,
-                                    fill='blue',
-                                    width=3,
-                                    tags='hop'
-                                    )
-            cords = self.bellhop.x, self.bellhop.y, x1, y1
-            cords = self.inversey(cords)
-            line = self.canvas.create_line(*cords, fill='red', tags='hop')
-            self.readings.append(line)
+            sensor.d = 20
 
         self.update_map()
-        self.r = 90
+        self.r = 50
         self.angle = 0
+
+        for wall in self.bellhop.map.walls:
+            cords = self.inversey(wall)
+            self.canvas.create_line(*cords, fill='yellow', tags='wall')
 
         # Start the loop
         self.onUpdate()
 
     def update_map(self):
         """Update map canvas"""
-        # Store old position and bearing of bellhop
-        x, y, alpha = self.bellhop.x, self.bellhop.y, self.bellhop.alpha
+        self.redraw_bellhop()
 
-        # Get change
-#        dx, dy, dalpha = self.bellhop.deltas()
-
+    def redraw_bellhop(self):
         # Delete old lines
         self.canvas.delete('hop')
+        self.canvas.delete('sensor')
 
         # Redraw bellhop
         for sensor in self.bellhop.sensors:
-            sensor.d = 50
             x1, y1 = self.bellhop.sensor_point(sensor)
-            x2, y2 = self.bellhop.sensor_measurement(sensor)
-            cords = x1, y1, x2, y2
+            sensor_v = self.bellhop.measurement_vector(sensor)
+            wall = self.bellhop.map.closest(sensor_v)
+            wall_v = self.bellhop.map.wall_vector(wall)
+            intersection = self.bellhop.map.intersection(sensor_v, wall_v)
+            cords = x1, y1, intersection[0], intersection[1]
             cords = self.inversey(cords)
             self.canvas.create_line(*cords,
                                     fill='blue',
                                     width=3,
-                                    tags='hop'
+                                    tags='sensor'
                                     )
             cords = self.bellhop.x, self.bellhop.y, x1, y1
             cords = self.inversey(cords)
             line = self.canvas.create_line(*cords, fill='red', tags='hop')
             self.readings.append(line)
-
-    def newpos(x, y):
-        return x, y
 
     def entry_handler(self, event):
         if self.focus_get() is self.entry:
@@ -116,21 +105,25 @@ class Application(Frame):
                 print('')
             self.entry_contents.set('')
 
-    def add_ping(self, r, beta, gamma, id=None):
-        ping = hop.Ping(r, beta, gamma, id)
+    def add_ping(self, *args, **kwargs):
+        ping = hop.Ping(*args, **kwargs)
         self.bellhop.sensors.append(ping)
 
     def inversey(self, cords):
+        """Inverse y coordinates of a line"""
         y1 = self.height - cords[1]
         y2 = self.height - cords[3]
         new = cords[0], y1, cords[2], y2
         return new
 
     def onUpdate(self):
-        self.bellhop.x = 800/2 + self.r * sin(self.angle)
-        self.bellhop.y = 600/2 + self.r * cos(self.angle)
-        self.bellhop.alpha = self.angle + (2*pi)/4
         self.angle += (2*pi)/500
+        new_x = 800/2 + self.r * sin(self.angle)
+        new_y = 600/2 + self.r * cos(self.angle)
+        new_alpha = self.angle + (2*pi)/4
+        self.bellhop.x = new_x
+        self.bellhop.y = new_y
+        self.bellhop.alpha = new_alpha
         self.update_map()
         self.after(10, self.onUpdate)
 
