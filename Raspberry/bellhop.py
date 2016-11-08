@@ -1,4 +1,4 @@
-from math import sin, cos, atan2
+from math import sin, cos
 import serial
 from numpy import array
 from numpy.linalg import solve
@@ -110,10 +110,17 @@ class Map():
             min_x = min(wall[0], wall[2])
             max_y = max(wall[1], wall[3])
             min_y = min(wall[1], wall[3])
-            if (x <= 0 and vx <= 0) or (x >= 0 and vx >= 0):
-                if (y <= 0 and vy <= 0) or (y >= 0 and vy >= 0):
-                    if (ix >= min_x and ix <= max_x) and (iy >= min_y and iy <= max_y):
-                        yield wall
+
+            if not ((x <= 0 and vx <= 0) or (x >= 0 and vx >= 0)):
+                continue
+            if not ((y <= 0 and vy <= 0) or (y >= 0 and vy >= 0)):
+                continue
+            if not ((ix >= min_x and ix <= max_x)):
+                continue
+            if not ((iy >= min_y and iy <= max_y)):
+                continue
+
+            yield wall
 
     def closest(self, line):
         """Return closest wall infront of a line"""
