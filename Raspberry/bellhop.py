@@ -76,6 +76,7 @@ class Bellhop():
         self.x = x
         self.y = y
 
+'''
     def deltas(self, x, y):
         """Update position and return change in position and angle"""
         # Compute change in the position
@@ -89,6 +90,7 @@ class Bellhop():
         # Update position
         self.update_position(x, y)
         return dx, dy, dalpha
+'''
 
 
 class Map():
@@ -101,13 +103,7 @@ class Map():
         for wall in self.walls:
             wall_v = self.wall_vector(wall)
             point = self.intersection(line, wall_v)
-            if (point[0] >= 0 and line[0] >= 0):
-                xs = [wall[0], wall[2]]
-                ys = [wall[1], wall[3]]
-                in_xs = point[0] <= max(xs) and point[0] >= min(xs)
-                in_ys = point[1] <= max(ys) and point[1] >= min(ys)
-                if (in_xs or in_ys):
-                    yield wall
+            yield wall
 
     def closest(self, line):
         """Return closest wall infront of a line"""
