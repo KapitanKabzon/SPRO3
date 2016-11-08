@@ -102,20 +102,34 @@ class Map():
         """Generate walls which are in front of a line"""
         for wall in self.walls:
             wall_v = self.wall_vector(wall)
-            point = self.intersection(line, wall_v)
-            yield wall
+            ix, iy = self.intersection(line, wall_v)
+            x, y = self.intersection(line, wall_v)
+            x, y = x - line[0], y - line[0]
+            vx, vy = line[2], line[3]
+            max_x = max(wall[0], wall[2])
+            min_x = min(wall[0], wall[2])
+            max_y = max(wall[1], wall[3])
+            min_y = min(wall[1], wall[3])
+            if (x <= 0 and vx <= 0) or (x >= 0 and vx >= 0):
+                if (y <= 0 and vy <= 0) or (y >= 0 and vy >= 0):
+                    if (ix >= min_x and ix <= max_x) and (iy >= min_y and iy <= max_y):
+                        yield wall
 
     def closest(self, line):
         """Return closest wall infront of a line"""
-        d = 0
-        x, y = line[0], line[1]
+        distances = []
         for wall in self.infront(line):
             wall_v = self.wall_vector(wall)
-            point = self.intersection(line, wall_v)
-            dist = ((x - point[0])**2 + (y - point[1])**2) ** 0.5
-            if dist > d:
-                closest = wall
-        return closest
+            x0, y0 = line[0], line[1]
+            x, y = self.intersection(line, wall_v)
+            x, y = x - x0, y - y0
+            d = (x**2 + y**2)**0.5
+            distances.append((d, wall))
+        if not distances:
+            return None
+        else:
+            a = min(distances)
+            return a[1]
 
     @staticmethod
     def intersection(line1, line2):
@@ -134,7 +148,7 @@ class Map():
     def wall_vector(wall):
         """Return vector representation of wall line"""
         x0, y0 = wall[0], wall[1]
-        xv, yv = wall[2] - wall[0], wall[1] - wall[3]
+        xv, yv = wall[2] - wall[0], wall[3] - wall[1]
         return x0, y0, xv, yv
 
 

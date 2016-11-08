@@ -89,11 +89,16 @@ class MapTest(unittest.TestCase):
         self.line = (8, 8, 3, 2)
 
     def test_infront(self):
+        walls = []
         for wall in self.map.infront(self.line):
-            pass
-        pass
+            walls.append(wall)
+        correct_walls = [[10, 16, 16, 10], [12, 16, 16, 12]]
+        self.assertEqual(walls, correct_walls)
 
     def test_closest(self):
+        wall = self.map.closest(self.line)
+        correct_wall = [10, 16, 16, 10]
+        self.assertEqual(wall, correct_wall)
         pass
 
     def test_intersection_x(self):

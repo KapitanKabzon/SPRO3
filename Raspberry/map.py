@@ -82,13 +82,15 @@ class Application(Frame):
             x1, y1 = self.bellhop.sensor_point(sensor)
             sensor_v = self.bellhop.measurement_vector(sensor)
             wall = self.bellhop.map.closest(sensor_v)
+            if wall is None:
+                continue
             wall_v = self.bellhop.map.wall_vector(wall)
             intersection = self.bellhop.map.intersection(sensor_v, wall_v)
             cords = x1, y1, intersection[0], intersection[1]
             cords = self.inversey(cords)
             self.canvas.create_line(*cords,
                                     fill='blue',
-                                    width=3,
+                                    width=5,
                                     tags='sensor'
                                     )
             cords = self.bellhop.x, self.bellhop.y, x1, y1
