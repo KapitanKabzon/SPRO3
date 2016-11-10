@@ -28,7 +28,7 @@ class Application(Frame):
 
         self.entry_contents = StringVar()
         self.entry['textvariable'] = self.entry_contents
-        self.entry_contents.set('x1, y1, x2, y2')
+        self.entry_contents.set('x1 y1 x2 y2')
         self.entry.bind('<Key-Return>', self.entry_handler)
 
         # Mouse
@@ -90,10 +90,10 @@ class Application(Frame):
                                 anchor=tk.NW,
                                 )
 
-
         self.r = 150
         self.angle = 0
 
+        # Draw map walls
         for wall in self.bellhop.map.walls:
             cords = self.inversey(wall)
             self.canvas.create_line(*cords,
@@ -186,9 +186,14 @@ class Application(Frame):
         if self.focus_get() is self.entry:
             try:
                 input = self.entry_contents.get().split()
-                self.canvas.create_line(*input, fill='red', width=3)
+                wall = []
+                for cord in input:
+                    wall.append(int(cord))
+                wall = self.inversey(wall)
+                self.canvas.create_line(*input, fill='yellow', width=2)
+                self.bellhop.map.walls.append(wall)
             except:
-                print('')
+                print('Entry input not in format: "x1 y1 x2 y2"')
             self.entry_contents.set('')
 
     def mouse_handler(self, event):

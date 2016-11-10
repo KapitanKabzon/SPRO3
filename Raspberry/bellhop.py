@@ -28,6 +28,7 @@ class Ping():
         return xm, ym
 
     def update(self):
+        """Get latest measurement from the arduino"""
         self.d = self.arduino.measurements[self.id]
 
     def vect(self):
