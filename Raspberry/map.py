@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import Canvas, Tk, StringVar
 from tkinter.ttk import Frame, Button, Entry, Label
 from math import pi, sin, cos
@@ -56,18 +57,32 @@ class Application(Frame):
                  )
         self.canvas.create_rectangle(*cords, fill='white', tags='hop')
 
-        self.trail = []
         for sensor in self.bellhop.sensors:
             sensor.d = 20
 
+        # Text on canvas
+        ypos = 5
+        for sensor in self.bellhop.sensors:
+            id = sensor.id
+            self.canvas.create_text(5,
+                                    ypos,
+                                    text=id,
+                                    fill='white',
+                                    anchor=tk.NW
+                                    )
+            ypos += 15
+
         self.update_map()
-        self.r = 50
+        self.r = 150
         self.angle = 0
 
         for wall in self.bellhop.map.walls:
             cords = self.inversey(wall)
-            self.canvas.create_line(*cords, fill='yellow', tags='wall')
-
+            self.canvas.create_line(*cords,
+                                    fill='yellow',
+                                    tags='wall',
+                                    width=2
+                                    )
         # Start the loop
         self.onUpdate()
 
@@ -79,8 +94,10 @@ class Application(Frame):
         # Delete old lines
         self.canvas.delete('hop')
         self.canvas.delete('sensor')
+        self.canvas.delete('reading')
 
-        # Redraw bellhop
+        ypos = 5
+        # Sensor lines and readings
         for sensor in self.bellhop.sensors:
             sensor_v = self.bellhop.measurement_vector(sensor)
             x1, y1 = self.bellhop.sensor_point(sensor)
@@ -90,10 +107,15 @@ class Application(Frame):
 
             wall = self.bellhop.map.closest(sensor_v)
             if wall is None:
+                ypos += 15
                 continue
 
+            # Draw reading
             wall_v = self.bellhop.map.wall_vector(wall)
             intersection = self.bellhop.map.intersection(sensor_v, wall_v)
+            if intersection is None:
+                ypos += 15
+                continue
             cords = x1, y1, intersection[0], intersection[1]
             cords = self.inversey(cords)
             self.canvas.create_line(*cords,
@@ -101,6 +123,26 @@ class Application(Frame):
                                     width=5,
                                     tags='sensor'
                                     )
+
+            # Calculate the reading
+            d = self.bellhop.map.length(cords)
+            self.canvas.create_text(20,
+                                    ypos,
+                                    text=d,
+                                    fill='white',
+                                    anchor=tk.NW,
+                                    tags='reading'
+                                    )
+            ypos += 15
+
+        # Bellhop center
+        cords = (self.bellhop.x - 3,
+                 self.bellhop.y - 3,
+                 self.bellhop.x + 3,
+                 self.bellhop.y + 3
+                 )
+        cords = self.inversey(cords)
+        self.canvas.create_rectangle(*cords, fill='white', tags='hop')
 
     def entry_handler(self, event):
         if self.focus_get() is self.entry:
@@ -127,8 +169,8 @@ class Application(Frame):
 
     def onUpdate(self):
         self.angle += (2*pi)/500
-        new_x = 800/2 + self.r * sin(self.angle)
-        new_y = 600/2 + self.r * cos(self.angle)
+        new_x = self.width/2 + self.r * sin(self.angle)
+        new_y = self.height/2 + self.r * cos(self.angle)
         new_alpha = self.angle + (2*pi)/4
         self.bellhop.x = new_x
         self.bellhop.y = new_y

@@ -102,7 +102,10 @@ class Map():
         """Generate walls which are in front of a line"""
         for wall in self.walls:
             wall_v = self.wall_vector(wall)
-            ix, iy = self.intersection(line, wall_v)
+            try:
+                ix, iy = self.intersection(line, wall_v)
+            except:
+                continue
             x, y = self.intersection(line, wall_v)
             x, y = x - line[0], y - line[0]
             vx, vy = line[2], line[3]
@@ -145,11 +148,22 @@ class Map():
                    [line2[3], -line1[3]]])
         b = array([[line1[0] - line2[0]],
                    [line1[1] - line2[1]]])
-        co = solve(a, b)
+        try:
+            co = solve(a, b)
+        except:
+            return None
 
         x = line2[0] + co[0][0] * line2[2]
         y = line2[1] + co[0][0] * line2[3]
         return x, y
+
+    @staticmethod
+    def length(line):
+        """Return length of a line"""
+        x1, y1, x2, y2 = line
+        x, y = x2 - x1, y2 - y1
+        len = (x**2 + y**2)**0.5
+        return len
 
     @staticmethod
     def wall_vector(wall):
