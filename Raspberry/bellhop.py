@@ -107,7 +107,7 @@ class Map():
             except:
                 continue
             x, y = self.intersection(line, wall_v)
-            x, y = x - line[0], y - line[0]
+            x, y = x - line[0], y - line[1]
             vx, vy = line[2], line[3]
             max_x = max(wall[0], wall[2])
             min_x = min(wall[0], wall[2])

@@ -134,8 +134,8 @@ class Application(Frame):
                                 tags='position'
                                 )
 
-        ypos = 5
         # Sensor lines and readings
+        ypos = 5
         for sensor in self.bellhop.sensors:
             sensor_v = self.bellhop.measurement_vector(sensor)
             x1, y1 = self.bellhop.sensor_point(sensor)
