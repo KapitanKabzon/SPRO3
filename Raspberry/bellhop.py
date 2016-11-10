@@ -38,7 +38,7 @@ class Ping():
 
 
 class Bellhop():
-    def __init__(self, x, y, alpha, arduino=None):
+    def __init__(self, x, y, alpha, arduino=None, map='map.json'):
         self.x = x
         self.y = y
         # Bearing angle
@@ -46,7 +46,7 @@ class Bellhop():
         self.arduino = arduino
         # List of attached ultrasonic sensors
         self.sensors = []
-        self.map = Map('map.json')
+        self.map = Map(map)
 
     def measurement_vector(self, sensor: Ping):
         """Return vector representation of measurement line"""

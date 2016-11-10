@@ -13,7 +13,8 @@ class Application(Frame):
         self.grid()
 
         # Map canvas
-        self.canvas = Canvas(self, width=self.width, height=self.height)
+        self.canvas = Canvas(self, width=self.width, height=self.height,
+                             cursor='plus')
         self.canvas.grid(row=0, column=0, columnspan=4, padx=pad, pady=pad)
 
         # Add button
@@ -29,13 +30,16 @@ class Application(Frame):
         self.entry_contents.set('x1, y1, x2, y2')
         self.entry.bind('<Key-Return>', self.entry_handler)
 
+        # Mouse
+        self.bind('<Button-1>', self.mouse_handler)
+
         # Status label
         self.status = Label(self)
         self.status.grid(row=1, column=2, padx=pad, pady=pad)
         self.entry.focus()
 
         # Bellhop biz
-        self.bellhop = hop.Bellhop(800/2, 600/2, 0)
+        self.bellhop = hop.Bellhop(800/2, 600/2, 0, map='map.json')
         self.add_ping(40, 0, 0, id=0)
         self.add_ping(40, 0.125*pi, 0.125*pi, id=1)
         self.add_ping(40, -0.125*pi, -0.125*pi, id=2)
@@ -52,7 +56,6 @@ class Application(Frame):
                  )
         self.canvas.create_rectangle(*cords, fill='white', tags='hop')
 
-        self.readings = []
         self.trail = []
         for sensor in self.bellhop.sensors:
             sensor.d = 20
@@ -79,11 +82,16 @@ class Application(Frame):
 
         # Redraw bellhop
         for sensor in self.bellhop.sensors:
-            x1, y1 = self.bellhop.sensor_point(sensor)
             sensor_v = self.bellhop.measurement_vector(sensor)
+            x1, y1 = self.bellhop.sensor_point(sensor)
+            cords = self.bellhop.x, self.bellhop.y, x1, y1
+            cords = self.inversey(cords)
+            self.canvas.create_line(*cords, fill='red', tags='hop')
+
             wall = self.bellhop.map.closest(sensor_v)
             if wall is None:
                 continue
+
             wall_v = self.bellhop.map.wall_vector(wall)
             intersection = self.bellhop.map.intersection(sensor_v, wall_v)
             cords = x1, y1, intersection[0], intersection[1]
@@ -93,10 +101,6 @@ class Application(Frame):
                                     width=5,
                                     tags='sensor'
                                     )
-            cords = self.bellhop.x, self.bellhop.y, x1, y1
-            cords = self.inversey(cords)
-            line = self.canvas.create_line(*cords, fill='red', tags='hop')
-            self.readings.append(line)
 
     def entry_handler(self, event):
         if self.focus_get() is self.entry:
@@ -106,6 +110,9 @@ class Application(Frame):
             except:
                 print('')
             self.entry_contents.set('')
+
+    def mouse_handler(self, event):
+        print('click ', event.x, event.y)
 
     def add_ping(self, *args, **kwargs):
         ping = hop.Ping(*args, **kwargs)
