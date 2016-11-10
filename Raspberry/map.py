@@ -60,19 +60,37 @@ class Application(Frame):
         for sensor in self.bellhop.sensors:
             sensor.d = 20
 
-        # Text on canvas
+        # Sensor lables
+        xpos = 5
         ypos = 5
         for sensor in self.bellhop.sensors:
             id = sensor.id
-            self.canvas.create_text(5,
+            self.canvas.create_text(xpos,
                                     ypos,
                                     text=id,
                                     fill='white',
-                                    anchor=tk.NW
+                                    anchor=tk.NW,
                                     )
             ypos += 15
 
-        self.update_map()
+        # Bellhop position labels
+        xpos = 200
+        ypos = 5
+        self.canvas.create_text(xpos,
+                                ypos,
+                                text='x:',
+                                fill='white',
+                                anchor=tk.NW,
+                                )
+        ypos += 15
+        self.canvas.create_text(xpos,
+                                ypos,
+                                text='y:',
+                                fill='white',
+                                anchor=tk.NW,
+                                )
+
+
         self.r = 150
         self.angle = 0
 
@@ -91,10 +109,30 @@ class Application(Frame):
         self.redraw_bellhop()
 
     def redraw_bellhop(self):
-        # Delete old lines
+        # Delete old lines, and text
         self.canvas.delete('hop')
         self.canvas.delete('sensor')
         self.canvas.delete('reading')
+        self.canvas.delete('position')
+
+        # Print position
+        xpos = 215
+        ypos = 5
+        self.canvas.create_text(xpos,
+                                ypos,
+                                text=self.bellhop.x,
+                                fill='white',
+                                anchor=tk.NW,
+                                tags='position'
+                                )
+        ypos += 15
+        self.canvas.create_text(xpos,
+                                ypos,
+                                text=self.bellhop.y,
+                                fill='white',
+                                anchor=tk.NW,
+                                tags='position'
+                                )
 
         ypos = 5
         # Sensor lines and readings
