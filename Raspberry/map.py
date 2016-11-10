@@ -18,13 +18,13 @@ class Application(Frame):
                              cursor='plus')
         self.canvas.grid(row=0, column=0, columnspan=4, padx=pad, pady=pad)
 
-        # Add button
-        self.add = Button(self, text='Add')
-        self.add.grid(row=1, column=0, padx=pad, pady=pad)
+        # Quit button
+        self.button = Button(self, text='Quit', command=exit)
+        self.button.grid(row=1, column=3, padx=pad, pady=pad)
 
         # Entry
         self.entry = Entry(self)
-        self.entry.grid(row=1, column=1,  padx=pad, pady=pad)
+        self.entry.grid(row=1, column=0,  padx=pad, pady=pad)
 
         self.entry_contents = StringVar()
         self.entry['textvariable'] = self.entry_contents
